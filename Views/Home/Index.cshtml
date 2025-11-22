@@ -1,8 +1,148 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang chủ";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Học Miễn Phí Cùng EduFree</h1>
+        <p>Hàng ngàn khóa học chất lượng cao, hoàn toàn miễn phí</p>
+        <a href="#" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+            Bắt đầu học ngay <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title">Tại sao chọn EduFree?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h3>100% Miễn Phí</h3>
+                <p>Tất cả khóa học đều hoàn toàn miễn phí, không có chi phí ẩn</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3>Chứng Chỉ</h3>
+                <p>Nhận chứng chỉ sau khi hoàn thành khóa học</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Cộng Đồng</h3>
+                <p>Tham gia cộng đồng học viên sôi động</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Học Mọi Lúc</h3>
+                <p>Học theo tốc độ của bạn, mọi lúc mọi nơi</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Courses Section -->
+<section class="courses-section">
+    <div class="container">
+        <h2 class="section-title">Khóa Học Phổ Biến</h2>
+        <div class="course-grid">
+            <div class="course-card">
+                <img src="https://via.placeholder.com/400x200/4f46e5/ffffff?text=ASP.NET+Core" alt="ASP.NET Core" class="course-image">
+                <div class="course-content">
+                    <span class="course-category">Lập trình Web</span>
+                    <h3 class="course-title">Lập trình ASP.NET Core MVC từ cơ bản đến nâng cao</h3>
+                    <p>Học xây dựng ứng dụng web với ASP.NET Core, Entity Framework và SQL Server</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-user"></i> 2,543 học viên</span>
+                        <span><i class="fas fa-clock"></i> 45 giờ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-card">
+                <img src="https://via.placeholder.com/400x200/10b981/ffffff?text=React+JS" alt="React JS" class="course-image">
+                <div class="course-content">
+                    <span class="course-category">Frontend</span>
+                    <h3 class="course-title">React JS - Xây dựng ứng dụng Single Page</h3>
+                    <p>Làm chủ React JS, Hooks, Redux và tích hợp API REST</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-user"></i> 3,210 học viên</span>
+                        <span><i class="fas fa-clock"></i> 38 giờ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-card">
+                <img src="https://via.placeholder.com/400x200/f59e0b/ffffff?text=Python" alt="Python" class="course-image">
+                <div class="course-content">
+                    <span class="course-category">Lập trình</span>
+                    <h3 class="course-title">Python cho người mới bắt đầu</h3>
+                    <p>Học Python từ cơ bản, lập trình hướng đối tượng và xử lý dữ liệu</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-user"></i> 4,892 học viên</span>
+                        <span><i class="fas fa-clock"></i> 32 giờ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-card">
+                <img src="https://via.placeholder.com/400x200/ef4444/ffffff?text=Data+Science" alt="Data Science" class="course-image">
+                <div class="course-content">
+                    <span class="course-category">Data Science</span>
+                    <h3 class="course-title">Khoa học dữ liệu với Python</h3>
+                    <p>Phân tích dữ liệu, machine learning và visualization với Python</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-user"></i> 1,876 học viên</span>
+                        <span><i class="fas fa-clock"></i> 52 giờ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-card">
+                <img src="https://via.placeholder.com/400x200/8b5cf6/ffffff?text=UI+UX" alt="UI UX" class="course-image">
+                <div class="course-content">
+                    <span class="course-category">Thiết kế</span>
+                    <h3 class="course-title">UI/UX Design căn bản</h3>
+                    <p>Học thiết kế giao diện người dùng và trải nghiệm người dùng chuyên nghiệp</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-user"></i> 2,109 học viên</span>
+                        <span><i class="fas fa-clock"></i> 28 giờ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-card">
+                <img src="https://via.placeholder.com/400x200/06b6d4/ffffff?text=Flutter" alt="Flutter" class="course-image">
+                <div class="course-content">
+                    <span class="course-category">Mobile App</span>
+                    <h3 class="course-title">Lập trình Mobile với Flutter</h3>
+                    <p>Xây dựng ứng dụng di động đa nền tảng với Flutter và Dart</p>
+                    <div class="course-meta">
+                        <span><i class="fas fa-user"></i> 1,654 học viên</span>
+                        <span><i class="fas fa-clock"></i> 42 giờ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="hero" style="padding: 3rem 0;">
+    <div class="container">
+        <h2>Bắt đầu hành trình học tập của bạn ngay hôm nay!</h2>
+        <p>Đăng ký miễn phí và truy cập hàng ngàn khóa học chất lượng</p>
+        <a href="#" class="btn btn-outline" style="border-color: white; color: white; font-size: 1.1rem; padding: 0.8rem 2rem;">
+            Đăng ký ngay
+        </a>
+    </div>
+</section>

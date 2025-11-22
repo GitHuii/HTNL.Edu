@@ -8,6 +8,7 @@ namespace HTNL.Edu.Models
         [Key]
         public int LessonID { get; set; }
         public string LessonName { get; set; }
+        public string LessonImage { get; set; }
         public string LinkVideo { get; set; }
 
 

@@ -1,0 +1,394 @@
+﻿@model Course
+
+@{
+    ViewData["Title"] = Model.CourseName;
+}
+
+<style>
+    .course-detail-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+    }
+
+    .breadcrumb {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+            .breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .course-detail-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-top: -50px;
+        padding-bottom: 3rem;
+    }
+
+    .course-main {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .course-detail-img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .course-main-content {
+        padding: 2rem;
+    }
+
+    .course-detail-category {
+        display: inline-block;
+        background: #4f46e5;
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .course-detail-title {
+        font-size: 2rem;
+        color: #1f2937;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+
+    .course-detail-description {
+        color: #4b5563;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+    }
+
+    .course-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-box {
+        text-align: center;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+    }
+
+        .info-box i {
+            font-size: 2rem;
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box h4 {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-box p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+    .course-sidebar {
+        position: sticky;
+        top: 100px;
+    }
+
+    .sidebar-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .price-section {
+        margin-bottom: 2rem;
+    }
+
+    .original-price {
+        font-size: 1.2rem;
+        color: #9ca3af;
+        text-decoration: line-through;
+        margin-bottom: 0.5rem;
+    }
+
+    .free-price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #10b981;
+        margin-bottom: 0.5rem;
+    }
+
+    .price-save {
+        font-size: 0.9rem;
+        color: #ef4444;
+        font-weight: 600;
+    }
+
+    .btn-enroll {
+        width: 100%;
+        background: #4f46e5;
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        border: none;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 1rem;
+    }
+
+        .btn-enroll:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+    .guarantee {
+        padding: 1rem;
+        background: #f0fdf4;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+        .guarantee i {
+            color: #10b981;
+            margin-right: 0.5rem;
+        }
+
+    .sidebar-features {
+        text-align: left;
+    }
+
+        .sidebar-features h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+        color: #4b5563;
+    }
+
+        .feature-item i {
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+
+    .section-title {
+        font-size: 1.8rem;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #4f46e5;
+        display: inline-block;
+    }
+
+    .what-learn {
+        background: #f9fafb;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .learn-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .learn-item {
+        display: flex;
+        align-items: start;
+        gap: 0.8rem;
+    }
+
+        .learn-item i {
+            color: #10b981;
+            margin-top: 0.2rem;
+        }
+
+
+</style>
+
+<!-- Header -->
+<div class="course-detail-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">
+                <i class="fas fa-home"></i> Trang chủ
+            </a>
+            <span>/</span>
+            <a asp-controller="Course" asp-action="Index">Khóa học</a>
+            <span>/</span>
+            <span>@Model.CourseName</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="course-detail-container">
+        <!-- Main Content -->
+        <div class="course-main">
+            <img src="@Model.CourseImage" alt="@Model.CourseName" class="course-detail-img"
+                 onerror="this.src='https://via.placeholder.com/800x400/4f46e5/ffffff?text=@Uri.EscapeDataString(Model.CourseName)'">
+
+            <div class="course-main-content">
+                <span class="course-detail-category">
+                    <i class="fas fa-tag"></i> @(Model.Category?.CategoryName ?? "Chưa phân loại")
+                </span>
+
+                <h1 class="course-detail-title">@Model.CourseName</h1>
+
+                <p class="course-detail-description">@Model.Description</p>
+
+                <div class="course-info-grid">
+                    <div class="info-box">
+                        <i class="fas fa-clock"></i>
+                        <h4>Thời lượng</h4>
+                        <p>40 giờ</p>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-users"></i>
+                        <h4>Học viên</h4>
+                        <p>2,543</p>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-star"></i>
+                        <h4>Đánh giá</h4>
+                        <p>4.8/5.0</p>
+                    </div>
+                </div>
+
+                <!-- What You'll Learn -->
+                <h2 class="section-title">Bạn sẽ học được gì?</h2>
+                <div class="what-learn">
+                    <div class="learn-grid">
+                        <div class="learn-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Nắm vững các kiến thức cơ bản và nâng cao</span>
+                        </div>
+                        <div class="learn-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Thực hành với các dự án thực tế</span>
+                        </div>
+                        <div class="learn-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Xây dựng portfolio chuyên nghiệp</span>
+                        </div>
+                        <div class="learn-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Chuẩn bị cho công việc thực tế</span>
+                        </div>
+                        <div class="learn-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Học cách debug và giải quyết vấn đề</span>
+                        </div>
+                        <div class="learn-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Nhận chứng chỉ sau khi hoàn thành</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Content -->
+                <h2 class="section-title">Nội dung khóa học</h2>
+                <div class="what-learn">
+                    <p style="color: #6b7280; margin-bottom: 1rem;">
+                        <strong>45 bài học</strong> • <strong>40 giờ học</strong> • Cập nhật mới nhất tháng 11/2024
+                    </p>
+                    <div class="learn-item" style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Phần 1: Giới thiệu và cài đặt môi trường</span>
+                    </div>
+                    <div class="learn-item" style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Phần 2: Các khái niệm cơ bản</span>
+                    </div>
+                    <div class="learn-item" style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Phần 3: Thực hành nâng cao</span>
+                    </div>
+                    <div class="learn-item">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Phần 4: Dự án thực tế</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="course-sidebar">
+            <div class="sidebar-card">
+                <div class="price-section">
+                    <p class="original-price">1.999.000đ</p>
+                    <p class="free-price">MIỄN PHÍ</p>
+                    <p class="price-save">Tiết kiệm 100%</p>
+                </div>
+
+                <button class="btn-enroll">
+                    <i class="fas fa-graduation-cap"></i> Đăng ký học ngay
+                </button>
+
+                <div class="guarantee">
+                    <i class="fas fa-shield-alt"></i>
+                    <strong>Học trọn đời</strong>, không giới hạn thời gian
+                </div>
+
+                <div class="sidebar-features">
+                    <h3>Khóa học bao gồm:</h3>
+                    <div class="feature-item">
+                        <i class="fas fa-video"></i>
+                        <span>40 giờ video</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Tài liệu đầy đủ</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-code"></i>
+                        <span>Source code mẫu</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-infinity"></i>
+                        <span>Truy cập trọn đời</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-certificate"></i>
+                        <span>Chứng chỉ hoàn thành</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-comments"></i>
+                        <span>Hỗ trợ cộng đồng</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,251 @@
+﻿@model IEnumerable<Course>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Tất cả khóa học";
+}
+
+<style>
+    .course-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .course-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 1rem;
+        align-items: end;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+    .course-count {
+        color: #6b7280;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .course-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .course-item {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .course-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .course-img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .course-body {
+        padding: 1.5rem;
+    }
+
+    .course-category-badge {
+        display: inline-block;
+        background: #4f46e5;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .course-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        color: #1f2937;
+        line-height: 1.4;
+    }
+
+    .course-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .course-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .course-price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #10b981;
+    }
+
+    .btn-view {
+        background: #4f46e5;
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s;
+    }
+
+    .btn-view:hover {
+        background: #4338ca;
+        color: white;
+    }
+
+    .no-courses {
+        text-align: center;
+        padding: 3rem;
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+
+    .no-courses i {
+        font-size: 4rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<!-- Header -->
+<div class="course-header">
+    <div class="container">
+        <h1><i class="fas fa-book-open"></i> Tất cả khóa học</h1>
+        <p>Khám phá hàng trăm khóa học chất lượng cao hoàn toàn miễn phí</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form method="get" asp-action="Index" class="filter-form">
+            <div class="filter-group">
+                <label for="categoryId">Danh mục</label>
+                <select name="categoryId" id="categoryId" onchange="this.form.submit()">
+                    <option value="0">Tất cả danh mục</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.CategoryID"
+                                selected="@(ViewBag.CurrentCategory == category.CategoryID)">
+                            @category.CategoryName
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="searchString">Tìm kiếm</label>
+                <input type="text" 
+                       name="searchString" 
+                       id="searchString" 
+                       value="@ViewBag.SearchString" 
+                       placeholder="Nhập tên khóa học...">
+            </div>
+
+            <div class="filter-group" style="flex: 0;">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Tìm kiếm
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Course Count -->
+    <div class="course-count">
+        <i class="fas fa-graduation-cap"></i> 
+        Tìm thấy <strong>@Model.Count()</strong> khóa học
+    </div>
+
+    <!-- Course List -->
+    @if (Model.Any())
+    {
+        <div class="course-list">
+            @foreach (var course in Model)
+            {
+                <a asp-action="Details" asp-route-id="@course.CourseID" class="course-item">
+                    <img src="@course.CourseImage" alt="@course.CourseName" class="course-img" 
+                         onerror="this.src='https://via.placeholder.com/400x220/4f46e5/ffffff?text=@Uri.EscapeDataString(course.CourseName)'">
+                    <div class="course-body">
+                        <span class="course-category-badge">
+                            @(course.Category?.CategoryName ?? "Chưa phân loại")
+                        </span>
+                        <h3 class="course-name">@course.CourseName</h3>
+                        <p class="course-description">@course.Description</p>
+                        <div class="course-footer">
+                            <span class="course-price">
+                                <i class="fas fa-gift"></i> MIỄN PHÍ
+                            </span>
+                            <span class="btn-view">
+                                Xem chi tiết <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="no-courses">
+            <div>
+                <i class="fas fa-search"></i>
+            </div>
+            <h3>Không tìm thấy khóa học nào</h3>
+            <p>Vui lòng thử lại với từ khóa hoặc bộ lọc khác</p>
+        </div>
+    }
+</div>

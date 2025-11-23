@@ -1,0 +1,173 @@
+﻿@using HTNL.Edu.Models
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h2 style="margin-bottom: 2rem; color: #1f2937;">
+    <i class="fas fa-chart-line"></i> Tổng quan hệ thống
+</h2>
+
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon primary">
+            <i class="fas fa-book"></i>
+        </div>
+        <div class="stat-info">
+            <h3>@ViewBag.TotalCourses</h3>
+            <p>Tổng khóa học</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon success">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+            <h3>@ViewBag.TotalUsers</h3>
+            <p>Người dùng</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon warning">
+            <i class="fas fa-tags"></i>
+        </div>
+        <div class="stat-info">
+            <h3>@ViewBag.TotalCategories</h3>
+            <p>Danh mục</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon danger">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="stat-info">
+            <h3>12,543</h3>
+            <p>Lượt học</p>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Content Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 2rem;">
+    <!-- Latest Courses -->
+    <div class="table-card">
+        <div class="table-header">
+            <h2><i class="fas fa-book"></i> Khóa học mới nhất</h2>
+            <a asp-area="Admin" asp-controller="Courses" asp-action="Index" class="btn btn-primary btn-sm">
+                Xem tất cả
+            </a>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Khóa học</th>
+                    <th>Danh mục</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.LatestCourses != null && ViewBag.LatestCourses.Count > 0)
+                {
+                    @foreach (var course in ViewBag.LatestCourses)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@course.CourseName</strong>
+                            </td>
+                            <td>
+                                <span class="badge badge-primary">
+                                    @course.Category?.CategoryName
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding: 2rem; color: #6b7280;">
+                            Chưa có khóa học nào
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Latest Users -->
+    <div class="table-card">
+        <div class="table-header">
+            <h2><i class="fas fa-users"></i> Top Streak</h2>
+            <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-primary btn-sm">
+                Xem tất cả
+            </a>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Vai trò</th>
+                    <th>Streak</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.LatestUsers != null && ViewBag.LatestUsers.Count > 0)
+                {
+                    @foreach (User user in ViewBag.LatestUsers)
+                    {
+                        <tr>
+                            <td>
+                                <i class="fas fa-user"></i> @user.FullName
+                            </td>
+                            <td>
+                                @if (user.Role == "Admin")
+                                {
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-crown"></i> Admin
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-primary">User</span>
+                                }
+                            </td>
+                            <td>@user.Streak</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 2rem; color: #6b7280;">
+                            Chưa có người dùng nào
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="table-card" style="margin-top: 2rem;">
+    <div class="table-header">
+        <h2><i class="fas fa-bolt"></i> Thao tác nhanh</h2>
+    </div>
+    <div style="padding: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a asp-area="Admin" asp-controller="Courses" asp-action="Create" class="btn btn-success">
+            <i class="fas fa-plus"></i> Thêm khóa học mới
+        </a>
+        <a asp-area="Admin" asp-controller="Users" asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Thêm người dùng
+        </a>
+        <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="btn btn-warning">
+            <i class="fas fa-tags"></i> Quản lý danh mục
+        </a>
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-primary">
+            <i class="fas fa-home"></i> Về trang chủ
+        </a>
+    </div>
+</div>

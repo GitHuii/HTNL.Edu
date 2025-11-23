@@ -30,10 +30,10 @@ using HTNL.Edu.Models;
 
         modelBuilder.Entity<User>().HasData(
             new User { UserID = 1, FullName = "Admin", Role = "Admin", Streak = 0, Email = "admin@htnl.edu" , UserName = "admin", PassWord = "admin" },
-            new User { UserID = 2, FullName = "Nam", Role = "Admin", Streak = 0, Email = "nam@htnl.edu", UserName = "nam", PassWord = "123" },
-            new User { UserID = 3, FullName = "Tai", Role = "Admin", Streak = 0, Email = "tai@htnl.edu", UserName = "tai", PassWord = "123" },
-            new User { UserID = 4, FullName = "Luong", Role = "Admin", Streak = 0, Email = "luong@htnl.edu", UserName = "luong", PassWord = "123" },
-            new User { UserID = 5, FullName = "Huy", Role = "Admin", Streak = 0, Email = "huy@htnl.edu", UserName = "huy", PassWord = "123" }
+            new User { UserID = 2, FullName = "Nam", Role = "User", Streak = 2, Email = "nam@htnl.edu", UserName = "nam", PassWord = "123" },
+            new User { UserID = 3, FullName = "Tai", Role = "User", Streak = 18, Email = "tai@htnl.edu", UserName = "tai", PassWord = "123" },
+            new User { UserID = 4, FullName = "Luong", Role = "User", Streak = 34, Email = "luong@htnl.edu", UserName = "luong", PassWord = "123" },
+            new User { UserID = 5, FullName = "Huy", Role = "User", Streak = 36, Email = "huy@htnl.edu", UserName = "huy", PassWord = "123" }
             );
 
         modelBuilder.Entity<Category>().HasData(
@@ -69,7 +69,8 @@ using HTNL.Edu.Models;
 
     }
 
-        public DbSet<HTNL.Edu.Models.User> User { get; set; } = default!;
+        public DbSet<HTNL.Edu.Models.User> Users { get; set; } = default!;
         public DbSet<HTNL.Edu.Models.Category> Categories { get; set; } = default!;
         public DbSet<HTNL.Edu.Models.Course> Courses { get; set; } = default!;
+        public DbSet<HTNL.Edu.Models.Lesson> Lessons { get; set; } = default!;
 }

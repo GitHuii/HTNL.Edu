@@ -1,0 +1,338 @@
+﻿@using HTNL.Edu.Models
+@model Category
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Xóa danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .delete-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .delete-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fef2f2;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+        .delete-header h2 {
+            font-size: 1.3rem;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+    .delete-body {
+        padding: 2rem;
+    }
+
+    .warning-box {
+        background: #fef2f2;
+        border: 2px solid #fecaca;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+        .warning-box i {
+            color: #dc2626;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+    .warning-content h3 {
+        color: #991b1b;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .warning-content p {
+        color: #7f1d1d;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .category-preview {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .category-icon-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        flex-shrink: 0;
+    }
+
+    .category-details {
+        flex: 1;
+    }
+
+    .category-name-large {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .category-id-large {
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+
+    .stat-row {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .stat-item-delete {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+    }
+
+        .stat-item-delete i {
+            color: #4f46e5;
+        }
+
+        .stat-item-delete strong {
+            color: #1f2937;
+        }
+
+    .courses-list {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .courses-list h4 {
+            color: #7c2d12;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+    .course-item-delete {
+        padding: 0.8rem;
+        background: white;
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #1f2937;
+    }
+
+        .course-item-delete:last-child {
+            margin-bottom: 0;
+        }
+
+        .course-item-delete i {
+            color: #ea580c;
+        }
+
+    .error-block {
+        background: #fee2e2;
+        border: 2px solid #fca5a5;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .error-block h4 {
+            color: #991b1b;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-block p {
+            color: #7f1d1d;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-delete-confirm {
+        background: #dc2626;
+        color: white;
+    }
+
+        .btn-delete-confirm:hover {
+            background: #b91c1c;
+        }
+
+        .btn-delete-confirm:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+</style>
+
+<div class="delete-card">
+    <div class="delete-header">
+        <h2>
+            <i class="fas fa-exclamation-triangle"></i> Xác nhận xóa danh mục
+        </h2>
+        <a asp-action="Index" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="delete-body">
+        <div class="warning-box">
+            <i class="fas fa-exclamation-circle"></i>
+            <div class="warning-content">
+                <h3>Cảnh báo: Thao tác này không thể hoàn tác!</h3>
+                <p>
+                    Bạn đang chuẩn bị xóa danh mục khỏi hệ thống.
+                    @if (Model.Courses != null && Model.Courses.Any())
+                    {
+                        <strong style="color: #dc2626;">
+                            Không thể xóa vì danh mục này đang có @Model.Courses.Count khóa học!
+                        </strong>
+                    }
+                    else
+                    {
+                        <span>Vui lòng kiểm tra kỹ thông tin trước khi thực hiện.</span>
+                    }
+                </p>
+            </div>
+        </div>
+
+        <!-- Category Preview -->
+        <div class="category-preview">
+            <div class="category-icon-large">
+                <i class="fas fa-folder"></i>
+            </div>
+            <div class="category-details">
+                <div class="category-name-large">@Model.CategoryName</div>
+                <div class="category-id-large">ID: #@Model.CategoryID</div>
+                <div class="stat-row">
+                    <div class="stat-item-delete">
+                        <i class="fas fa-book"></i>
+                        <span><strong>@(Model.Courses?.Count ?? 0)</strong> khóa học</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Courses != null && Model.Courses.Any())
+        {
+            <!-- Cannot Delete Error -->
+            <div class="error-block">
+                <h4>
+                    <i class="fas fa-ban"></i> Không thể xóa danh mục này
+                </h4>
+                <p>
+                    Danh mục này đang được sử dụng bởi <strong>@Model.Courses.Count khóa học</strong>.
+                    Bạn cần xóa hoặc chuyển tất cả các khóa học sang danh mục khác trước khi xóa danh mục này.
+                </p>
+            </div>
+
+            <!-- List of Courses -->
+            <div class="courses-list">
+                <h4>
+                    <i class="fas fa-list"></i> Các khóa học trong danh mục:
+                </h4>
+                @foreach (var course in Model.Courses.Take(10))
+                {
+                    <div class="course-item-delete">
+                        <i class="fas fa-book"></i>
+                        <span>@course.CourseName</span>
+                    </div>
+                }
+                @if (Model.Courses.Count > 10)
+                {
+                    <div style="margin-top: 0.5rem; color: #7c2d12; font-size: 0.9rem;">
+                        <i>...và @(Model.Courses.Count - 10) khóa học khác</i>
+                    </div>
+                }
+            </div>
+
+            <!-- Action Buttons - Disabled -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-delete-confirm" disabled>
+                    <i class="fas fa-ban"></i> Không thể xóa
+                </button>
+                <a asp-action="Index" class="btn btn-success">
+                    <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model.CategoryID" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Chỉnh sửa danh mục
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- Can Delete -->
+            <div style="background: #d1fae5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 1rem; margin-bottom: 2rem; color: #065f46;">
+                <i class="fas fa-check-circle"></i>
+                <strong>Danh mục này có thể được xóa</strong> - Không có khóa học nào đang sử dụng.
+            </div>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="CategoryID" />
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-delete-confirm">
+                        <i class="fas fa-trash"></i> Xác nhận xóa
+                    </button>
+                    <a asp-action="Index" class="btn btn-success">
+                        <i class="fas fa-times"></i> Hủy bỏ
+                    </a>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@if (!(Model.Courses != null && Model.Courses.Any()))
+{
+    @section Scripts {
+        <script>
+            document.querySelector('form')?.addEventListener('submit', function(e) {
+                if (!confirm('Bạn có CHẮC CHẮN muốn xóa danh mục "@Model.CategoryName"?\n\nThao tác này KHÔNG THỂ hoàn tác!')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        </script>
+    }
+}

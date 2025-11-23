@@ -1,0 +1,335 @@
+﻿@using HTNL.Edu.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Lesson
+@{
+    ViewData["Title"] = "Thêm bài học mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+        .form-header h2 {
+            margin: 0;
+            color: #1f2937;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .form-header i {
+            font-size: 2rem;
+            color: #3b82f6;
+        }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+        .form-label .required {
+            color: #ef4444;
+            margin-left: 0.25rem;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-control:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .image-upload-area {
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        background: #f9fafb;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+        .image-upload-area:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .image-upload-area i {
+            font-size: 3rem;
+            color: #9ca3af;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+    .upload-text {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+        .upload-text strong {
+            color: #3b82f6;
+        }
+
+    #imageFile {
+        display: none;
+    }
+
+    .image-preview {
+        margin-top: 1rem;
+        display: none;
+    }
+
+        .image-preview img {
+            max-width: 300px;
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    .text-danger {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        background: #3b82f6;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+
+    .btn-secondary {
+        background: #6b7280;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+    .form-hint {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: start;
+        gap: 0.5rem;
+    }
+
+        .form-hint i {
+            color: #3b82f6;
+            margin-top: 0.125rem;
+        }
+</style>
+
+<div class="form-card">
+    <div class="form-header">
+        <i class="fas fa-plus-circle"></i>
+        <h2>Thêm bài học mới</h2>
+    </div>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Khóa học -->
+        <div class="form-group">
+            <label asp-for="CourseID" class="form-label">
+                Khóa học <span class="required">*</span>
+            </label>
+            <select asp-for="CourseID" class="form-control" asp-items="ViewBag.Courses">
+                <option value="">-- Chọn khóa học --</option>
+            </select>
+            <span asp-validation-for="CourseID" class="text-danger"></span>
+        </div>
+
+        <!-- Tên bài học -->
+        <div class="form-group">
+            <label asp-for="LessonName" class="form-label">
+                Tên bài học <span class="required">*</span>
+            </label>
+            <input asp-for="LessonName" class="form-control"
+                   placeholder="Ví dụ: [ Bài 1 ] : Giới thiệu về C++" />
+            <span asp-validation-for="LessonName" class="text-danger"></span>
+            <div class="form-hint">
+                <i class="fas fa-info-circle"></i>
+                <span>Nên đặt tên theo định dạng: [ Bài X ] : Tiêu đề bài học</span>
+            </div>
+        </div>
+
+        <!-- Link Video -->
+        <div class="form-group">
+            <label asp-for="LinkVideo" class="form-label">
+                Link video YouTube <span class="required">*</span>
+            </label>
+            <input asp-for="LinkVideo" class="form-control"
+                   placeholder="https://www.youtube.com/embed/..." />
+            <span asp-validation-for="LinkVideo" class="text-danger"></span>
+            <div class="form-hint">
+                <i class="fas fa-info-circle"></i>
+                <span>Link phải có dạng: https://www.youtube.com/embed/VIDEO_ID</span>
+            </div>
+        </div>
+
+        <!-- Hình ảnh -->
+        <div class="form-group">
+            <label class="form-label">
+                Hình ảnh bài học
+            </label>
+            <label for="imageFile" class="image-upload-area">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <div class="upload-text">
+                    <strong>Nhấp để chọn ảnh</strong> hoặc kéo thả ảnh vào đây
+                    <br>
+                    <small>PNG, JPG, GIF (Tối đa 2MB)</small>
+                </div>
+            </label>
+            <input type="file" id="imageFile" name="imageFile"
+                   accept="image/*" onchange="previewImage(this)" />
+            <div id="imagePreview" class="image-preview">
+                <img id="preview" src="#" alt="Preview" />
+            </div>
+        </div>
+
+        <!-- Hidden field for existing image -->
+        <input type="hidden" asp-for="LessonImage" />
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Lưu bài học
+            </button>
+            <a asp-action="Index" asp-controller="Courses" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Hủy bỏ
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.querySelector('.image-upload-area');
+        const fileInput = document.getElementById('imageFile');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.style.borderColor = '#3b82f6';
+                uploadArea.style.background = '#eff6ff';
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.style.borderColor = '#d1d5db';
+                uploadArea.style.background = '#f9fafb';
+            }, false);
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            previewImage(fileInput);
+        }, false);
+    </script>
+}

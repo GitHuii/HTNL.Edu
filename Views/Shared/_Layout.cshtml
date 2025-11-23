@@ -30,8 +30,63 @@
                     </li>
                 </ul>
                 <div class="navbar-actions">
-                    <a class="btn btn-outline" asp-area="" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Register">Đăng ký</a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        var fullName = User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value ?? User.Identity.Name;
+                        var streak = User.Claims.FirstOrDefault(c => c.Type == "Streak")?.Value ?? "0";
+
+                        <div class="user-info">
+                            <div class="streak-badge">
+                                <i class="fas fa-fire"></i>
+                                <span>@streak</span>
+                            </div>
+                            <div class="user-dropdown">
+                                <button class="user-btn" id="userDropdown">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <span class="user-name">@fullName</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="dropdown-menu" id="dropdownMenu">
+                                    <div class="dropdown-header">
+                                        <div class="user-avatar-large">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <div class="dropdown-user-name">@fullName</div>
+                                            <div class="dropdown-user-email">@(User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value)</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Profile">
+                                        <i class="fas fa-user"></i>
+                                        <span>Trang cá nhân</span>
+                                    </a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Course" asp-action="MyCourses">
+                                        <i class="fas fa-book"></i>
+                                        <span>Khóa học của tôi</span>
+                                    </a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Settings">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Cài đặt</span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                        <button type="submit" class="dropdown-item logout">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                            <span>Đăng xuất</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline" asp-area="" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Register">Đăng ký</a>
+                    }
                 </div>
             </div>
         </nav>
@@ -88,6 +143,27 @@
     </footer>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Dropdown menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDropdown = document.getElementById('userDropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (userDropdown && dropdownMenu) {
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userDropdown.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

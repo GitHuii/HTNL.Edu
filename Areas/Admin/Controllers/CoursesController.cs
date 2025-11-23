@@ -1,4 +1,5 @@
-﻿using HTNL.Edu.Models;
+﻿using HTMLEdu.Filters;
+using HTNL.Edu.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HTNL.Edu.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [AdminAuthorize]
     public class CoursesController : Controller
     {
         private readonly AppDbContext _context;

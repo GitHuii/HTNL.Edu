@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HTMLEdu.Filters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HTNL.Edu.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [AdminAuthorize]
     public class DashboardController : Controller
     {
         private readonly AppDbContext _context;

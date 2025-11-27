@@ -1,0 +1,8 @@
+﻿@{
+    var streak = User.Claims.FirstOrDefault(c => c.Type == "Streak")?.Value ?? "0";
+}
+
+<div class="streak-badge" id="streakBadge">
+    <i class="fas fa-fire"></i>
+    <span id="streakValue">@streak</span>
+</div>

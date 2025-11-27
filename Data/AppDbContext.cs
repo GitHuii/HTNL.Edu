@@ -28,6 +28,12 @@ using HTNL.Edu.Models;
             .HasForeignKey(cdl => cdl.LessonID)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<CourseDetailLesson>()
+            .HasOne(c => c.Lesson)
+            .WithMany(l => l.CourseDetailLessons)
+            .HasForeignKey(c => c.LessonID)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<User>().HasData(
             new User { UserID = 1, FullName = "Admin", Role = "Admin", Streak = 0, Email = "admin@htnl.edu" , UserName = "admin", PassWord = "admin" },
             new User { UserID = 2, FullName = "Nam", Role = "User", Streak = 2, Email = "nam@htnl.edu", UserName = "nam", PassWord = "123" },
@@ -73,4 +79,6 @@ using HTNL.Edu.Models;
         public DbSet<HTNL.Edu.Models.Category> Categories { get; set; } = default!;
         public DbSet<HTNL.Edu.Models.Course> Courses { get; set; } = default!;
         public DbSet<HTNL.Edu.Models.Lesson> Lessons { get; set; } = default!;
+        public DbSet<HTNL.Edu.Models.CourseDetail> CourseDetails { get; set; } = default!;
+        public DbSet<HTNL.Edu.Models.CourseDetailLesson> CourseDetailLessons { get; set; } = default!;
 }

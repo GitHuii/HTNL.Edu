@@ -41,6 +41,7 @@ namespace HTNL.Edu.Areas.Admin.Controllers
         }
 
         // GET: Admin/Users/Details/5
+        // GET: Admin/Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,7 +50,15 @@ namespace HTNL.Edu.Areas.Admin.Controllers
             }
 
             var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserID == id);
+                .Include(u => u.CourseDetails)
+                    .ThenInclude(cd => cd.Course)
+                        .ThenInclude(c => c.Category)
+                .Include(u => u.CourseDetails)
+                    .ThenInclude(cd => cd.Course)
+                        .ThenInclude(c => c.Lessons)
+                .Include(u => u.CourseDetails)
+                    .ThenInclude(cd => cd.CourseDetailLessons)
+                .FirstOrDefaultAsync(u => u.UserID == id);
 
             if (user == null)
             {

@@ -1,5 +1,6 @@
 ﻿@using HTNL.Edu.Controllers
 @model LearnViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = Model.CourseDetail?.Course?.CourseName ?? "Học bài";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -335,7 +336,7 @@
                     </div>
                     <div class="meta-item">
                         <i class="fas fa-clock"></i>
-                        <span>~45 phút</span>
+                        <span>@Model.CurrentLesson.Duration phút</span>
                     </div>
                 </div>
 
@@ -419,7 +420,7 @@
                             <div class="lesson-name">@lesson.LessonName</div>
                             <div class="lesson-duration">
                                 <i class="fas fa-clock"></i>
-                                <span>~45 phút</span>
+                                <span>@lesson.Duration phút</span>
                             </div>
                         </div>
                     </a>

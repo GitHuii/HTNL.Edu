@@ -1,0 +1,470 @@
+﻿@model HTNL.Edu.Models.UserSettingsViewModel
+@{
+    ViewData["Title"] = "Cài đặt tài khoản";
+}
+
+<div class="settings-container">
+    <div class="container">
+        <div class="settings-header">
+            <h1><i class="fas fa-cog"></i> Cài đặt tài khoản</h1>
+            <p>Quản lý thông tin cá nhân và bảo mật của bạn</p>
+        </div>
+
+        <div class="settings-layout">
+            <!-- Settings Navigation -->
+            <div class="settings-nav">
+                <a href="#profile-settings" class="settings-nav-item active">
+                    <i class="fas fa-user"></i>
+                    <span>Thông tin cá nhân</span>
+                </a>
+                <a href="#security-settings" class="settings-nav-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Mật khẩu & Bảo mật</span>
+                </a>
+                <a asp-action="Profile" class="settings-nav-item">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Quay lại hồ sơ</span>
+                </a>
+            </div>
+
+            <!-- Settings Content -->
+            <div class="settings-content">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>@TempData["SuccessMessage"]</span>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>@TempData["ErrorMessage"]</span>
+                    </div>
+                }
+
+                <!-- Profile Settings Section -->
+                <div id="profile-settings" class="settings-section">
+                    <div class="settings-section-header">
+                        <h2>Thông tin cá nhân</h2>
+                        <p>Cập nhật thông tin của bạn</p>
+                    </div>
+
+                    <form asp-action="UpdateProfile" asp-controller="Account" method="post" class="settings-form">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="FullName" class="form-label">
+                                <i class="fas fa-id-card"></i> Họ và tên
+                            </label>
+                            <input asp-for="FullName" class="form-control" placeholder="Nhập họ và tên" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input asp-for="Email" class="form-control" type="email" placeholder="example@email.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="UserName" class="form-label">
+                                <i class="fas fa-user"></i> Tên đăng nhập
+                            </label>
+                            <input asp-for="UserName" class="form-control" disabled />
+                            <small class="form-text">Tên đăng nhập không thể thay đổi</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                            <a asp-action="Profile" class="btn btn-outline">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Security Settings Section -->
+                <div id="security-settings" class="settings-section">
+                    <div class="settings-section-header">
+                        <h2>Mật khẩu & Bảo mật</h2>
+                        <p>Thay đổi mật khẩu để bảo vệ tài khoản</p>
+                    </div>
+
+                    <form asp-action="ChangePassword" asp-controller="Account" method="post" class="settings-form">
+                        <div class="security-notice">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <strong>Bảo mật tài khoản</strong>
+                                <p>Sử dụng mật khẩu mạnh và không chia sẻ với người khác</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="CurrentPassword" class="form-label">
+                                <i class="fas fa-lock"></i> Mật khẩu hiện tại
+                            </label>
+                            <input type="password" name="CurrentPassword" class="form-control" placeholder="Nhập mật khẩu hiện tại" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NewPassword" class="form-label">
+                                <i class="fas fa-key"></i> Mật khẩu mới
+                            </label>
+                            <input type="password" name="NewPassword" class="form-control" placeholder="Nhập mật khẩu mới" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ConfirmPassword" class="form-label">
+                                <i class="fas fa-check-circle"></i> Xác nhận mật khẩu mới
+                            </label>
+                            <input type="password" name="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu mới" required />
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Đổi mật khẩu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="settings-section danger-zone">
+                    <div class="settings-section-header">
+                        <h2>Vùng nguy hiểm</h2>
+                        <p>Các hành động không thể hoàn tác</p>
+                    </div>
+
+                    <div class="danger-actions">
+                        <div class="danger-item">
+                            <div>
+                                <h4>Xóa tài khoản</h4>
+                                <p>Xóa vĩnh viễn tài khoản và toàn bộ dữ liệu của bạn</p>
+                            </div>
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                                <i class="fas fa-trash"></i> Xóa tài khoản
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .settings-container {
+        background: #f8f9fa;
+        min-height: calc(100vh - 80px);
+        padding: 40px 0;
+    }
+
+    .settings-header {
+        margin-bottom: 40px;
+    }
+
+        .settings-header h1 {
+            margin: 0 0 10px;
+            font-size: 36px;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .settings-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+    .settings-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+    }
+
+    .settings-nav {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+    }
+
+    .settings-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        border-radius: 12px;
+        color: #6b7280;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-bottom: 8px;
+    }
+
+        .settings-nav-item:hover {
+            background: #f3f4f6;
+            color: #667eea;
+        }
+
+        .settings-nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .settings-nav-item i {
+            font-size: 18px;
+            width: 24px;
+        }
+
+    .settings-content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .settings-section {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    }
+
+    .settings-section-header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+        .settings-section-header h2 {
+            margin: 0 0 8px;
+            font-size: 24px;
+            color: #1f2937;
+        }
+
+        .settings-section-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+    .settings-form .form-group {
+        margin-bottom: 25px;
+    }
+
+    .settings-form .form-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 14px;
+    }
+
+        .settings-form .form-label i {
+            color: #667eea;
+            width: 20px;
+        }
+
+    .settings-form .form-control {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .settings-form .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .settings-form .form-control:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+    .form-text {
+        display: block;
+        margin-top: 6px;
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .security-notice {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        background: #dbeafe;
+        border-left: 4px solid #3b82f6;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+
+        .security-notice i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+
+        .security-notice strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #1e40af;
+        }
+
+        .security-notice p {
+            margin: 0;
+            color: #1e3a8a;
+            font-size: 14px;
+        }
+
+    .danger-zone {
+        border: 2px solid #fee2e2;
+    }
+
+        .danger-zone .settings-section-header {
+            border-bottom-color: #fee2e2;
+        }
+
+            .danger-zone .settings-section-header h2 {
+                color: #dc2626;
+            }
+
+    .danger-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .danger-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: #fef2f2;
+        border-radius: 12px;
+        border: 1px solid #fee2e2;
+    }
+
+        .danger-item h4 {
+            margin: 0 0 5px;
+            color: #991b1b;
+            font-size: 16px;
+        }
+
+        .danger-item p {
+            margin: 0;
+            color: #7f1d1d;
+            font-size: 14px;
+        }
+
+    .btn-danger {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+
+    .alert {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #6ee7b7;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+    }
+
+    @@media (max-width: 768px) {
+        .settings-layout
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-nav {
+        position: static;
+    }
+
+    .danger-item {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    }
+</style>
+
+<script>
+    // Settings Navigation
+    document.addEventListener('DOMContentLoaded', function() {
+        const navItems = document.querySelectorAll('.settings-nav-item[href^="#"]');
+        const sections = document.querySelectorAll('.settings-section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    // Update active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Scroll to section
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    });
+
+    function confirmDelete() {
+        if (confirm('Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác!')) {
+            alert('Tính năng xóa tài khoản đang được phát triển.');
+        }
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

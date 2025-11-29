@@ -1,4 +1,5 @@
-﻿using HTNL.Edu.Models;
+﻿using HTMLEdu.Filters;
+using HTNL.Edu.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -158,6 +159,158 @@ namespace HTMLEdu.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [UserAuthorize]
+        public async Task<IActionResult> Profile()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var user = await _context.Users
+                .Include(u => u.CourseDetails)
+                    .ThenInclude(cd => cd.Course)
+                .FirstOrDefaultAsync(u => u.UserID == userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var viewModel = new UserProfileViewModel
+            {
+                UserID = user.UserID,
+                FullName = user.FullName,
+                UserName = user.UserName,
+                Email = user.Email,
+                Streak = user.Streak ?? 0,
+                TotalCourses = user.CourseDetails.Count,
+                //CompletedCourses = user.CourseDetails.Count(cd => cd.CompletionPercentage >= 100),
+                //InProgressCourses = user.CourseDetails.Count(cd => cd.CompletionPercentage < 100)
+                CompletedCourses = 1,
+                InProgressCourses = 1
+            };
+
+            return View(viewModel);
+        }
+
+        // GET: Account/Settings
+        [UserAuthorize]
+        public async Task<IActionResult> Settings()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var viewModel = new UserSettingsViewModel
+            {
+                FullName = user.FullName,
+                Email = user.Email,
+                UserName = user.UserName
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: Account/UpdateProfile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [UserAuthorize]
+        public async Task<IActionResult> UpdateProfile(UserSettingsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Settings", model);
+            }
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Kiểm tra email đã tồn tại (trừ email của chính user)
+            if (await _context.Users.AnyAsync(u => u.Email == model.Email && u.UserID != userId))
+            {
+                ModelState.AddModelError("Email", "Email đã được sử dụng bởi tài khoản khác");
+                return View("Settings", model);
+            }
+
+            // Update user info
+            user.FullName = model.FullName;
+            user.Email = model.Email;
+
+            await _context.SaveChangesAsync();
+
+            // Update claims
+            await UpdateUserClaims(user);
+
+            TempData["SuccessMessage"] = "Cập nhật thông tin thành công!";
+            return RedirectToAction("Settings");
+        }
+
+        // POST: Account/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [UserAuthorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin";
+                return RedirectToAction("Settings");
+            }
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify old password
+            if (user.PassWord != model.CurrentPassword)
+            {
+                TempData["ErrorMessage"] = "Mật khẩu hiện tại không đúng";
+                return RedirectToAction("Settings");
+            }
+
+            // Update password
+            user.PassWord = model.NewPassword;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Đổi mật khẩu thành công!";
+            return RedirectToAction("Settings");
+        }
+
+        // Helper method to update claims after profile update
+        private async Task UpdateUserClaims(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName ?? ""),
+                new Claim(ClaimTypes.Email, user.Email ?? ""),
+                new Claim("FullName", user.FullName ?? ""),
+                new Claim("Role", user.Role ?? "User"),
+                new Claim("Streak", user.Streak?.ToString() ?? "0")
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, "UserScheme");
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
+            };
+
+            await HttpContext.SignInAsync("UserScheme", claimsPrincipal, authProperties);
         }
     }
 }

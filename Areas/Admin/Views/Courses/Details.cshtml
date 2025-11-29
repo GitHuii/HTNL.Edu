@@ -380,9 +380,9 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th style="width: 60px;">ID</th>
-                        <th style="width: 140px;">Hình ảnh</th>
+                        <th style="width: 100px;">ID</th>
                         <th>Tên bài học</th>
+                        <th style="width: 150px;">Thời lượng</th>
                         <th style="width: 200px;">Link video</th>
                         <th style="width: 200px;">Thao tác</th>
                     </tr>
@@ -393,12 +393,10 @@
                         <tr>
                             <td><strong>#@lesson.LessonID</strong></td>
                             <td>
-                                <img src="@lesson.LessonImage" alt="@lesson.LessonName"
-                                     class="lesson-img-thumb"
-                                     onerror="this.src='/img/lesson_img/default.jpg'">
+                                <div class="lesson-name">@lesson.LessonName</div>
                             </td>
                             <td>
-                                <div class="lesson-name">@lesson.LessonName</div>
+                                <i class="fas fa-clock"></i> @lesson.Duration phút
                             </td>
                             <td>
                                 <a href="@lesson.LinkVideo" target="_blank" class="video-link">
@@ -408,7 +406,7 @@
                             </td>
                             <td>
                                 <div style="display: flex; gap: 0.5rem; justify-content: center;">
-                                    
+
                                     <a asp-area="Admin" asp-controller="Lessons" asp-action="Edit"
                                        asp-route-id="@lesson.LessonID"
                                        class="btn btn-warning btn-sm" title="Chỉnh sửa">
@@ -416,8 +414,7 @@
                                     </a>
                                     <a asp-area="Admin" asp-controller="Lessons" asp-action="Delete"
                                        asp-route-id="@lesson.LessonID"
-                                       class="btn btn-danger btn-sm" title="Xóa"
-                                       onclick="return confirm('Bạn có chắc chắn muốn xóa bài học này?')">
+                                       class="btn btn-danger btn-sm" title="Xóa">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -444,3 +441,4 @@
         </div>
     }
 </div>
+

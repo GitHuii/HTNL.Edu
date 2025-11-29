@@ -8,14 +8,15 @@ namespace HTNL.Edu.Models
         [Key]
         public int LessonID { get; set; }
         public string? LessonName { get; set; }
-        public string? LessonImage { get; set; }
         public string? LinkVideo { get; set; }
 
+        [Display(Name = "Thời lượng (phút)")]
+        public int Duration { get; set; } = 45; // Mặc định 45 phút
 
         [ForeignKey("Course")]
         public int CourseID { get; set; }
         public Course? Course { get; set; }
 
-        public ICollection<CourseDetailLesson>? CourseDetailLessons  { get; set; } = new List<CourseDetailLesson>();
+        public ICollection<CourseDetailLesson>? CourseDetailLessons { get; set; } = new List<CourseDetailLesson>();
     }
 }

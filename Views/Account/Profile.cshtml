@@ -1,0 +1,533 @@
+﻿@model HTNL.Edu.Models.UserProfileViewModel
+@{
+    ViewData["Title"] = "Trang cá nhân";
+}
+
+<div class="profile-container">
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar-wrapper">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="streak-circle">
+                    <i class="fas fa-fire"></i>
+                    <span>@Model.Streak</span>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1>@Model.FullName</h1>
+                <p class="username">@@@Model.UserName</p>
+                <p class="email"><i class="fas fa-envelope"></i> @Model.Email</p>
+            </div>
+            <div class="profile-actions">
+                <a asp-action="Settings" class="btn btn-outline">
+                    <i class="fas fa-cog"></i> Chỉnh sửa hồ sơ
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@Model.TotalCourses</h3>
+                    <p>Tổng khóa học</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@Model.CompletedCourses</h3>
+                    <p>Đã hoàn thành</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@Model.InProgressCourses</h3>
+                    <p>Đang học</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@Model.Streak</h3>
+                    <p>Chuỗi ngày học</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Progress -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> Tiến độ học tập</h2>
+            </div>
+            <div class="progress-overview">
+                <div class="progress-item">
+                    <div class="progress-label">
+                        <span>Hoàn thành</span>
+                        <strong>@Model.CompletedCourses/@Model.TotalCourses khóa học</strong>
+                    </div>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar" style="width: @(Model.TotalCourses > 0 ? (Model.CompletedCourses * 100.0 / Model.TotalCourses) : 0)%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);"></div>
+                    </div>
+                    <div class="progress-percent">
+                        @(Model.TotalCourses > 0 ? Math.Round(Model.CompletedCourses * 100.0 / Model.TotalCourses, 1) : 0)%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h2><i class="fas fa-history"></i> Hoạt động gần đây</h2>
+                <a asp-controller="Course" asp-action="MyCourses" class="view-all">
+                    Xem tất cả <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-title">Tiếp tục học khóa học của bạn</p>
+                        <p class="activity-time">Bạn có @Model.InProgressCourses khóa học đang học</p>
+                    </div>
+                    <a asp-controller="Course" asp-action="MyCourses" class="activity-action">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                @if (Model.Streak >= 7)
+                {
+                    <div class="activity-item">
+                        <div class="activity-icon achievement">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p class="activity-title">Thành tích mới! 🎉</p>
+                            <p class="activity-time">Bạn đã học liên tục @Model.Streak ngày</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="profile-section">
+            <div class="section-header">
+                <h2><i class="fas fa-trophy"></i> Thành tích</h2>
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card @(Model.Streak >= 7 ? "unlocked" : "locked")">
+                    <div class="achievement-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h4>Người kiên trì</h4>
+                    <p>Học liên tục 7 ngày</p>
+                </div>
+
+                <div class="achievement-card @(Model.CompletedCourses >= 1 ? "unlocked" : "locked")">
+                    <div class="achievement-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4>Người mới bắt đầu</h4>
+                    <p>Hoàn thành khóa học đầu tiên</p>
+                </div>
+
+                <div class="achievement-card @(Model.CompletedCourses >= 5 ? "unlocked" : "locked")">
+                    <div class="achievement-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Học giả</h4>
+                    <p>Hoàn thành 5 khóa học</p>
+                </div>
+
+                <div class="achievement-card @(Model.Streak >= 30 ? "unlocked" : "locked")">
+                    <div class="achievement-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h4>Chiến binh</h4>
+                    <p>Học liên tục 30 ngày</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        background: #f8f9fa;
+        min-height: calc(100vh - 80px);
+        padding: 40px 0;
+    }
+
+    .profile-header {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .profile-avatar-wrapper {
+        position: relative;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 48px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .streak-circle {
+        position: absolute;
+        bottom: 0;
+        right: -5px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+        border-radius: 50%;
+        border: 4px solid white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+
+        .streak-circle i {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .streak-circle span {
+            font-size: 12px;
+        }
+
+    .profile-info {
+        flex: 1;
+    }
+
+        .profile-info h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+            color: #1f2937;
+        }
+
+        .profile-info .username {
+            color: #667eea;
+            font-weight: 600;
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .profile-info .email {
+            color: #6b7280;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: transform 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+    }
+
+    .stat-info h3 {
+        margin: 0 0 5px;
+        font-size: 32px;
+        color: #1f2937;
+    }
+
+    .stat-info p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .profile-section {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+    .view-all {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: gap 0.3s ease;
+    }
+
+        .view-all:hover {
+            gap: 12px;
+        }
+
+    .progress-overview {
+        padding: 20px;
+    }
+
+    .progress-item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        grid-column: 1 / -1;
+    }
+
+    .progress-bar-wrapper {
+        height: 12px;
+        background: #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease;
+    }
+
+    .progress-percent {
+        font-weight: 700;
+        color: #667eea;
+        font-size: 18px;
+    }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .activity-item:hover {
+            background: #e5e7eb;
+        }
+
+    .activity-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+    }
+
+        .activity-icon.achievement {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        margin: 0 0 5px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .activity-time {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .activity-action {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .activity-action:hover {
+            background: #667eea;
+            color: white;
+        }
+
+    .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .achievement-card {
+        padding: 30px 20px;
+        border-radius: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+        .achievement-card.unlocked {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 2px solid #667eea;
+        }
+
+        .achievement-card.locked {
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            opacity: 0.6;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .achievement-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 28px;
+        margin: 0 auto 15px;
+    }
+
+    .achievement-card.locked .achievement-icon {
+        background: #9ca3af;
+    }
+
+    .achievement-card h4 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        color: #1f2937;
+    }
+
+    .achievement-card p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    @@media (max-width: 768px) {
+        .profile-header
+
+    {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-info {
+        text-align: center;
+    }
+
+    .profile-actions {
+        width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>

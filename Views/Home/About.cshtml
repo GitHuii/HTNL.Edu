@@ -1,0 +1,459 @@
+﻿@{
+    ViewData["Title"] = "Giới thiệu";
+}
+
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5rem 0 3rem;
+        text-align: center;
+    }
+
+        .about-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .about-hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+    .about-section {
+        padding: 4rem 0;
+    }
+
+        .about-section:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: var(--text-color);
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+    .mission-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .mission-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .mission-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+    .mission-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .mission-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .mission-card p {
+        color: var(--text-light);
+        line-height: 1.8;
+    }
+
+    .stats-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .stat-item {
+        padding: 2rem;
+    }
+
+    .stat-number {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .team-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .team-avatar {
+        width: 100%;
+        height: 280px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        color: white;
+        font-weight: 700;
+    }
+
+    .team-info {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .team-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .team-role {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+    }
+
+    .team-social {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+        .team-social a {
+            width: 35px;
+            height: 35px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+
+            .team-social a:hover {
+                background: var(--primary-color);
+                color: white;
+                transform: scale(1.1);
+            }
+
+    .story-content {
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 2;
+        font-size: 1.1rem;
+        color: var(--text-light);
+    }
+
+        .story-content p {
+            margin-bottom: 1.5rem;
+        }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    .value-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--primary-color);
+    }
+
+        .value-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .value-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+    @@media (max-width: 768px) {
+        .about-hero h1
+
+    {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <h1>Về EduFree</h1>
+        <p>Nền tảng học trực tuyến miễn phí hàng đầu Việt Nam, mang đến cơ hội học tập chất lượng cho mọi người</p>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="about-section">
+    <div class="container">
+        <h2 class="section-title">Sứ Mệnh Của Chúng Tôi</h2>
+        <div class="mission-grid">
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Giáo Dục Miễn Phí</h3>
+                <p>Cung cấp khóa học chất lượng cao hoàn toàn miễn phí, giúp mọi người có cơ hội học tập và phát triển bản thân.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Cộng Đồng Học Tập</h3>
+                <p>Xây dựng cộng đồng học viên năng động, nơi mọi người cùng nhau học hỏi, chia sẻ kiến thức và kinh nghiệm.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Công Nghệ Hiện Đại</h3>
+                <p>Áp dụng công nghệ mới nhất để mang đến trải nghiệm học tập tốt nhất, dễ dàng tiếp cận mọi lúc mọi nơi.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number" data-count="10000">0</span>
+                <span class="stat-label">Học viên</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="500">0</span>
+                <span class="stat-label">Khóa học</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="50">0</span>
+                <span class="stat-label">Giảng viên</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="95">0</span>
+                <span class="stat-label">% Hài lòng</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story Section -->
+<section class="about-section">
+    <div class="container">
+        <h2 class="section-title">Câu Chuyện Của Chúng Tôi</h2>
+        <div class="story-content">
+            <p>
+                EduFree được thành lập vào năm 2020 với mục tiêu đơn giản nhưng đầy tham vọng:
+                làm cho giáo dục chất lượng cao trở nên dễ tiếp cận cho mọi người, bất kể họ ở đâu hay hoàn cảnh ra sao.
+            </p>
+            <p>
+                Chúng tôi tin rằng giáo dục là chìa khóa để thay đổi cuộc sống và mở ra những cơ hội mới.
+                Với đội ngũ giảng viên giàu kinh nghiệm và đam mê, chúng tôi đã phát triển hàng trăm khóa học
+                chất lượng cao trong nhiều lĩnh vực khác nhau.
+            </p>
+            <p>
+                Đến nay, EduFree đã giúp hàng nghìn học viên học tập, phát triển kỹ năng và thay đổi sự nghiệp.
+                Chúng tôi tự hào khi được đồng hành cùng bạn trên con đường học tập và phát triển.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="about-section" style="background: var(--bg-light);">
+    <div class="container">
+        <h2 class="section-title">Giá Trị Cốt Lõi</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <h3><i class="fas fa-heart" style="color: #ef4444;"></i> Tận Tâm</h3>
+                <p>Chúng tôi luôn đặt học viên lên hàng đầu, tận tâm hỗ trợ và đồng hành cùng bạn trong suốt hành trình học tập.</p>
+            </div>
+            <div class="value-card">
+                <h3><i class="fas fa-star" style="color: #f59e0b;"></i> Chất Lượng</h3>
+                <p>Cam kết cung cấp nội dung khóa học chất lượng cao, được biên soạn bởi các chuyên gia hàng đầu trong ngành.</p>
+            </div>
+            <div class="value-card">
+                <h3><i class="fas fa-lightbulb" style="color: #10b981;"></i> Sáng Tạo</h3>
+                <p>Không ngừng đổi mới, cải tiến phương pháp giảng dạy và công nghệ để mang đến trải nghiệm tốt nhất.</p>
+            </div>
+            <div class="value-card">
+                <h3><i class="fas fa-handshake" style="color: #3b82f6;"></i> Minh Bạch</h3>
+                <p>Hoàn toàn miễn phí, không có chi phí ẩn. Chúng tôi tin vào sự minh bạch và công bằng trong giáo dục.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="about-section">
+    <div class="container">
+        <h2 class="section-title">Đội Ngũ Của Chúng Tôi</h2>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar">N</div>
+                <div class="team-info">
+                    <h3 class="team-name">Nguyễn Văn A</h3>
+                    <p class="team-role">CEO & Founder</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar">T</div>
+                <div class="team-info">
+                    <h3 class="team-name">Trần Thị B</h3>
+                    <p class="team-role">CTO</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar">L</div>
+                <div class="team-info">
+                    <h3 class="team-name">Lê Văn C</h3>
+                    <p class="team-role">Head of Education</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar">P</div>
+                <div class="team-info">
+                    <h3 class="team-name">Phạm Thị D</h3>
+                    <p class="team-role">Marketing Director</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Animated counter
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-count'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // Trigger animation when stats section is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.stat-number');
+                    counters.forEach(counter => animateCounter(counter));
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+}

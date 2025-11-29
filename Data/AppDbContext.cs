@@ -61,17 +61,17 @@ using HTNL.Edu.Models;
             );
 
         modelBuilder.Entity<Lesson>().HasData(
-            new Lesson { LessonID = 1, LessonName = "[ Bài 1 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/1.jpg" , LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw" ,CourseID = 1},
-            new Lesson { LessonID = 2, LessonName = "[ Bài 2 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/2.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", CourseID = 1 },
-            new Lesson { LessonID = 3, LessonName = "[ Bài 3 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/3.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", CourseID = 1 },
-            new Lesson { LessonID = 4, LessonName = "[ Bài 4 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/4.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", CourseID = 1 },
-            new Lesson { LessonID = 5, LessonName = "[ Bài 5 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/5.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw" , CourseID = 1 },
-            new Lesson { LessonID = 6, LessonName = "[ Bài 6 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/6.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw" , CourseID = 1 },
-            new Lesson { LessonID = 7, LessonName = "[ Bài 7 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/7.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw" , CourseID = 1 },
-            new Lesson { LessonID = 8, LessonName = "[ Bài 8 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/8.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw" , CourseID = 1 },
-            new Lesson { LessonID = 9, LessonName = "[ Bài 9 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/9.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw" , CourseID = 1 },
-            new Lesson { LessonID = 10, LessonName = "[ Bài 10 ] : Giới Thiệu Về C++", LessonImage = "/img/lesson_img/1/10.jpg", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", CourseID = 1 }
-            );
+     new Lesson { LessonID = 1, LessonName = "[ Bài 1 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 45, CourseID = 1 },
+     new Lesson { LessonID = 2, LessonName = "[ Bài 2 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 50, CourseID = 1 },
+     new Lesson { LessonID = 3, LessonName = "[ Bài 3 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 40, CourseID = 1 },
+     new Lesson { LessonID = 4, LessonName = "[ Bài 4 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 55, CourseID = 1 },
+     new Lesson { LessonID = 5, LessonName = "[ Bài 5 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 48, CourseID = 1 },
+     new Lesson { LessonID = 6, LessonName = "[ Bài 6 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 42, CourseID = 1 },
+     new Lesson { LessonID = 7, LessonName = "[ Bài 7 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 52, CourseID = 1 },
+     new Lesson { LessonID = 8, LessonName = "[ Bài 8 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 46, CourseID = 1 },
+     new Lesson { LessonID = 9, LessonName = "[ Bài 9 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 44, CourseID = 1 },
+     new Lesson { LessonID = 10, LessonName = "[ Bài 10 ] : Giới Thiệu Về C++", LinkVideo = "https://www.youtube.com/embed/74B6PXO97Tw", Duration = 50, CourseID = 1 }
+ );
 
     }
 

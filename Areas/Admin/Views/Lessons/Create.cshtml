@@ -80,53 +80,6 @@
         min-height: 80px;
     }
 
-    .image-upload-area {
-        border: 2px dashed #d1d5db;
-        border-radius: 8px;
-        padding: 2rem;
-        text-align: center;
-        background: #f9fafb;
-        transition: all 0.2s;
-        cursor: pointer;
-    }
-
-        .image-upload-area:hover {
-            border-color: #3b82f6;
-            background: #eff6ff;
-        }
-
-        .image-upload-area i {
-            font-size: 3rem;
-            color: #9ca3af;
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-    .upload-text {
-        color: #6b7280;
-        font-size: 0.95rem;
-    }
-
-        .upload-text strong {
-            color: #3b82f6;
-        }
-
-    #imageFile {
-        display: none;
-    }
-
-    .image-preview {
-        margin-top: 1rem;
-        display: none;
-    }
-
-        .image-preview img {
-            max-width: 300px;
-            max-height: 200px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
     .text-danger {
         color: #ef4444;
         font-size: 0.875rem;
@@ -189,6 +142,21 @@
             color: #3b82f6;
             margin-top: 0.125rem;
         }
+
+    .input-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .input-addon {
+        padding: 0.75rem 1rem;
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        color: #6b7280;
+        font-weight: 600;
+    }
 </style>
 
 <div class="form-card">
@@ -197,7 +165,7 @@
         <h2>Thêm bài học mới</h2>
     </div>
 
-    <form asp-action="Create" method="post" enctype="multipart/form-data">
+    <form asp-action="Create" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <!-- Khóa học -->
@@ -239,28 +207,23 @@
             </div>
         </div>
 
-        <!-- Hình ảnh -->
+        <!-- Thời lượng -->
         <div class="form-group">
-            <label class="form-label">
-                Hình ảnh bài học
+            <label asp-for="Duration" class="form-label">
+                Thời lượng bài học <span class="required">*</span>
             </label>
-            <label for="imageFile" class="image-upload-area">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <div class="upload-text">
-                    <strong>Nhấp để chọn ảnh</strong> hoặc kéo thả ảnh vào đây
-                    <br>
-                    <small>PNG, JPG, GIF (Tối đa 2MB)</small>
-                </div>
-            </label>
-            <input type="file" id="imageFile" name="imageFile"
-                   accept="image/*" onchange="previewImage(this)" />
-            <div id="imagePreview" class="image-preview">
-                <img id="preview" src="#" alt="Preview" />
+            <div class="input-group">
+                <input asp-for="Duration" class="form-control"
+                       type="number" min="1" max="300"
+                       placeholder="45" style="max-width: 150px;" />
+                <span class="input-addon">phút</span>
+            </div>
+            <span asp-validation-for="Duration" class="text-danger"></span>
+            <div class="form-hint">
+                <i class="fas fa-info-circle"></i>
+                <span>Nhập thời lượng bài học tính bằng phút (1-300 phút)</span>
             </div>
         </div>
-
-        <!-- Hidden field for existing image -->
-        <input type="hidden" asp-for="LessonImage" />
 
         <!-- Action Buttons -->
         <div class="form-actions">
@@ -280,56 +243,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        function previewImage(input) {
-            const preview = document.getElementById('imagePreview');
-            const previewImg = document.getElementById('preview');
-
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Drag and drop functionality
-        const uploadArea = document.querySelector('.image-upload-area');
-        const fileInput = document.getElementById('imageFile');
-
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, () => {
-                uploadArea.style.borderColor = '#3b82f6';
-                uploadArea.style.background = '#eff6ff';
-            }, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, () => {
-                uploadArea.style.borderColor = '#d1d5db';
-                uploadArea.style.background = '#f9fafb';
-            }, false);
-        });
-
-        uploadArea.addEventListener('drop', function(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            fileInput.files = files;
-            previewImage(fileInput);
-        }, false);
-    </script>
 }

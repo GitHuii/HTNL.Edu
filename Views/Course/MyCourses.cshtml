@@ -1,0 +1,395 @@
+﻿@model IEnumerable<CourseDetail>
+
+@{
+    ViewData["Title"] = "Khóa học của tôi";
+}
+
+<style>
+    .my-courses-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-title {
+        font-size: 2.5rem;
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .header-stats {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .courses-container {
+        padding-bottom: 3rem;
+    }
+
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .course-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    .course-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .course-content {
+        padding: 1.5rem;
+    }
+
+    .course-category {
+        display: inline-block;
+        background: #4f46e5;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .course-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.75rem;
+        line-height: 1.3;
+    }
+
+    .course-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .progress-section {
+        margin-bottom: 1rem;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-label {
+        font-size: 0.9rem;
+        color: #4b5563;
+        font-weight: 600;
+    }
+
+    .progress-percent {
+        font-size: 0.9rem;
+        color: #4f46e5;
+        font-weight: 700;
+    }
+
+    .progress-bar-container {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+        transition: width 0.3s;
+        border-radius: 10px;
+    }
+
+    .course-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+        .meta-item i {
+            color: #4f46e5;
+        }
+
+    .course-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: #4f46e5;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+        }
+
+    .btn-secondary {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        color: #d1d5db;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-title {
+        font-size: 1.75rem;
+        color: #1f2937;
+        margin-bottom: 0.75rem;
+        font-weight: 700;
+    }
+
+    .empty-description {
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin-bottom: 2rem;
+    }
+
+    .btn-explore {
+        background: #4f46e5;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+    }
+
+        .btn-explore:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+    .alert {
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .last-access {
+        font-size: 0.85rem;
+        color: #9ca3af;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+</style>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="container" style="margin-top: 2rem;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+        </div>
+    </div>
+}
+
+<div class="my-courses-header">
+    <div class="container">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-book-reader"></i> Khóa học của tôi
+            </h1>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number">@Model.Count()</div>
+                    <div class="stat-label">Khóa học</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">@Model.Sum(cd => cd.CourseDetailLessons?.Count(cdl => cdl.IsDone) ?? 0)</div>
+                    <div class="stat-label">Bài hoàn thành</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="courses-container">
+        @if (Model.Any())
+        {
+            <div class="courses-grid">
+                @foreach (var courseDetail in Model)
+                {
+                    var totalLessons = courseDetail.Course?.Lessons?.Count ?? 0;
+                    var completedLessons = courseDetail.CourseDetailLessons?.Count(cdl => cdl.IsDone) ?? 0;
+                    var progressPercent = totalLessons > 0 ? (int)((completedLessons * 100.0) / totalLessons) : 0;
+
+                    <div class="course-card">
+                        <img src="@courseDetail.Course?.CourseImage"
+                             alt="@courseDetail.Course?.CourseName"
+                             class="course-image"
+                             onerror="this.src='https://via.placeholder.com/350x200/4f46e5/ffffff?text=Course'">
+
+                        <div class="course-content">
+                            <span class="course-category">
+                                <i class="fas fa-tag"></i> @(courseDetail.Course?.Category?.CategoryName ?? "Chưa phân loại")
+                            </span>
+
+                            <h3 class="course-title">@courseDetail.Course?.CourseName</h3>
+
+                            <p class="course-description">
+                                @(courseDetail.Course?.Description?.Length > 80
+                                                        ? courseDetail.Course.Description.Substring(0, 80) + "..."
+                                                        : courseDetail.Course?.Description)
+                    </p>
+
+                            <div class="progress-section">
+                                <div class="progress-header">
+                                    <span class="progress-label">Tiến độ học tập</span>
+                                    <span class="progress-percent">@progressPercent%</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: @progressPercent%"></div>
+                                </div>
+                            </div>
+
+                            <div class="course-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>@completedLessons/@totalLessons bài</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>@(totalLessons * 4) giờ</span>
+                                </div>
+                            </div>
+
+                            <div class="last-access">
+                                <i class="fas fa-history"></i>
+                                <span>Truy cập lần cuối: @courseDetail.LastTime.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+
+                            <div class="course-actions" style="margin-top: 1rem;">
+                                <a asp-controller="Learn" asp-action="Index"
+                                   asp-route-courseId="@courseDetail.CourseID"
+                                   class="btn btn-primary">
+                                    <i class="fas fa-play"></i> Tiếp tục học
+                                </a>
+                                <a asp-controller="Course" asp-action="Details"
+                                   asp-route-id="@courseDetail.CourseID"
+                                   class="btn btn-secondary">
+                                    <i class="fas fa-info-circle"></i> Chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                        }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h2 class="empty-title">Bạn chưa đăng ký khóa học nào</h2>
+                <p class="empty-description">
+                    Hãy khám phá các khóa học miễn phí và bắt đầu hành trình học tập của bạn ngay hôm nay!
+                </p>
+                <a asp-controller="Course" asp-action="Index" class="btn-explore">
+                    <i class="fas fa-search"></i> Khám phá khóa học
+                </a>
+            </div>
+        }
+    </div>
+</div>

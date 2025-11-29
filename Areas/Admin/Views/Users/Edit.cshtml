@@ -1,0 +1,333 @@
+﻿@using HTNL.Edu.Models
+@model User
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Chỉnh sửa người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .form-header h2 {
+            font-size: 1.3rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+    .form-body {
+        padding: 2rem;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+    .password-input-wrapper {
+        position: relative;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+
+        .toggle-password:hover {
+            color: #1f2937;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .text-danger {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .validation-summary {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+        .validation-summary ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+    .role-options {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .radio-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            margin-bottom: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+    .info-box {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: start;
+        gap: 0.75rem;
+    }
+
+        .info-box i {
+            color: #3b82f6;
+            margin-top: 0.2rem;
+        }
+
+    .info-box-content {
+        flex: 1;
+    }
+
+        .info-box-content strong {
+            color: #1e40af;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-box-content p {
+            margin: 0;
+            color: #1e40af;
+            font-size: 0.9rem;
+        }
+
+
+</style>
+
+<div class="form-card">
+    <div class="form-header">
+        <h2>
+            <i class="fas fa-user-edit"></i> Chỉnh sửa người dùng
+        </h2>
+        <a asp-action="Index" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="form-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="UserID" />
+            <input type="hidden" asp-for="Streak"/>
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="UserName">
+                        <i class="fas fa-user"></i> Tên đăng nhập
+                        <span style="color: red;">*</span>
+                    </label>
+                    <input asp-for="UserName" class="form-control" readonly
+                           style="background-color: #f3f4f6; cursor: not-allowed;" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    <small style="color: #6b7280;">Không thể thay đổi tên đăng nhập</small>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email">
+                        <i class="fas fa-envelope"></i> Email
+                        <span style="color: red;">*</span>
+                    </label>
+                    <input asp-for="Email" type="email" class="form-control"
+                           placeholder="example@email.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label asp-for="FullName">
+                        <i class="fas fa-id-card"></i> Họ và tên
+                        <span style="color: red;">*</span>
+                    </label>
+                    <input asp-for="FullName" class="form-control"
+                           placeholder="Nguyễn Văn A" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="info-box-content">
+                            <strong>Đổi mật khẩu</strong>
+                            <p>Chỉ nhập mật khẩu mới nếu bạn muốn thay đổi. Để trống nếu giữ nguyên mật khẩu hiện tại.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">
+                        <i class="fas fa-lock"></i> Mật khẩu mới
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-control"
+                               id="newPassword" name="newPassword"
+                               placeholder="Nhập mật khẩu mới (nếu thay đổi)..."
+                               autocomplete="new-password" />
+                        <button type="button" class="toggle-password" onclick="togglePassword('newPassword')">
+                            <i class="fas fa-eye" id="newPasswordIcon"></i>
+                        </button>
+                    </div>
+                    <small style="color: #6b7280;">Để trống nếu không muốn đổi mật khẩu</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <i class="fas fa-lock"></i> Xác nhận mật khẩu mới
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-control"
+                               id="confirmPassword" placeholder="Nhập lại mật khẩu mới..."
+                               autocomplete="new-password" />
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                            <i class="fas fa-eye" id="confirmPasswordIcon"></i>
+                        </button>
+                    </div>
+                    <small id="passwordMatchMessage" style="color: #ef4444; display: none;">
+                        Mật khẩu không khớp
+                    </small>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>
+                        <i class="fas fa-user-shield"></i> Vai trò
+                        <span style="color: red;">*</span>
+                    </label>
+                    <div class="role-options">
+                        <div class="radio-option">
+                            <input type="radio" asp-for="Role" value="User" id="roleUser" />
+                            <label for="roleUser">
+                                <i class="fas fa-user"></i> Người dùng
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" asp-for="Role" value="Admin" id="roleAdmin" />
+                            <label for="roleAdmin">
+                                <i class="fas fa-crown"></i> Quản trị viên
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success" id="submitBtn">
+                    <i class="fas fa-save"></i> Cập nhật
+                </button>
+                <a asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-times"></i> Hủy bỏ
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + 'Icon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Check password match
+        const newPassword = document.getElementById('newPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function checkPasswordMatch() {
+            // Only check if new password is entered
+            if (newPassword.value && confirmPassword.value && newPassword.value !== confirmPassword.value) {
+                passwordMatchMessage.style.display = 'block';
+                confirmPassword.style.borderColor = '#ef4444';
+                submitBtn.disabled = true;
+            } else {
+                passwordMatchMessage.style.display = 'none';
+                confirmPassword.style.borderColor = '#d1d5db';
+                submitBtn.disabled = false;
+            }
+        }
+
+        newPassword.addEventListener('input', checkPasswordMatch);
+        confirmPassword.addEventListener('input', checkPasswordMatch);
+
+        // Validate form before submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Only validate if new password is entered
+            if (newPassword.value && newPassword.value !== confirmPassword.value) {
+                e.preventDefault();
+                alert('Mật khẩu xác nhận không khớp!');
+                return false;
+            }
+        });
+    </script>
+}

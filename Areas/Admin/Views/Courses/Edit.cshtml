@@ -1,0 +1,92 @@
+﻿@using HTNL.Edu.Models
+@model Course
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Chỉnh sửa khóa học";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="table-card">
+    <div class="table-header">
+        <h2><i class="fas fa-edit"></i> Chỉnh sửa khóa học</h2>
+        <a asp-action="Index" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div style="padding: 2rem;">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="CourseID" />
+            <input type="hidden" asp-for="CourseImage" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="CourseName">Tên khóa học <span style="color: red;">*</span></label>
+                <input asp-for="CourseName" class="form-control" placeholder="Nhập tên khóa học..." />
+                <span asp-validation-for="CourseName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description">Mô tả</label>
+                <textarea asp-for="Description" class="form-control" rows="4"
+                          placeholder="Nhập mô tả chi tiết về khóa học..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CategoryID">Danh mục <span style="color: red;">*</span></label>
+                <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID">
+                    <option value="">-- Chọn danh mục --</option>
+                </select>
+                <span asp-validation-for="CategoryID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Hình ảnh hiện tại</label>
+                <div style="margin-bottom: 1rem;">
+                    <img src="@Model.CourseImage" alt="Current Image"
+                         style="max-width: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+                         onerror="this.src='/img/course_img/default.jpg'">
+                </div>
+
+                <label for="courseImage">Thay đổi hình ảnh (tùy chọn)</label>
+                <input type="file" name="courseImage" id="courseImage" class="form-control" accept="image/*" onchange="previewImage(event)">
+                <small style="color: #6b7280;">Chỉ chọn file mới nếu bạn muốn thay đổi ảnh.</small>
+
+                <div id="imagePreview" style="margin-top: 1rem; display: none;">
+                    <p><strong>Ảnh mới:</strong></p>
+                    <img id="preview" src="" alt="Preview" style="max-width: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Cập nhật
+                </button>
+                <a asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-times"></i> Hủy bỏ
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+}

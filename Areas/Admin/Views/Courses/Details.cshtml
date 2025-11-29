@@ -1,0 +1,446 @@
+﻿@using HTNL.Edu.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Course
+@{
+    ViewData["Title"] = "Chi tiết khóa học";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+    </div>
+}
+
+<style>
+    .alert {
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+
+    .course-detail-header {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-info-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .course-image-container {
+        position: relative;
+    }
+
+    .course-main-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .course-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .course-meta {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+    }
+
+        .meta-item i {
+            color: #3b82f6;
+        }
+
+    .course-description {
+        color: #4b5563;
+        line-height: 1.6;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .lessons-section {
+        background: white;
+        border-radius: 12px;
+        padding: 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 2rem;
+        border-bottom: 2px solid #e5e7eb;
+        background: #f9fafb;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .data-table thead {
+            background: #f9fafb;
+        }
+
+        .data-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+            .data-table th:last-child {
+                text-align: center;
+            }
+
+        .data-table tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+            transition: background-color 0.2s;
+        }
+
+            .data-table tbody tr:hover {
+                background: #f9fafb;
+            }
+
+            .data-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+        .data-table td {
+            padding: 1rem 1.5rem;
+            color: #1f2937;
+            vertical-align: middle;
+        }
+
+            .data-table td:last-child {
+                text-align: center;
+            }
+
+    .lesson-img-thumb {
+        width: 120px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .lesson-name {
+        font-weight: 600;
+        color: #1f2937;
+        line-height: 1.4;
+    }
+
+    .video-link {
+        color: #3b82f6;
+        text-decoration: none;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+        .video-link:hover {
+            text-decoration: underline;
+        }
+
+        .video-link i {
+            font-size: 0.75rem;
+        }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background: #3b82f6;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+    .btn-warning {
+        background: #f59e0b;
+        color: white;
+    }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+    .btn-danger {
+        background: #ef4444;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+    .btn-secondary {
+        background: #6b7280;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+    .btn-sm {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .badge-primary {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #6b7280;
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            color: #d1d5db;
+        }
+
+        .empty-state p {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+        }
+
+    .table-footer {
+        padding: 1rem 2rem;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+        background: #f9fafb;
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+
+  
+</style>
+
+<!-- Course Detail Header -->
+<div class="course-detail-header">
+    <div class="course-info-grid">
+        <div class="course-image-container">
+            <img src="@Model.CourseImage" alt="@Model.CourseName"
+                 class="course-main-image"
+                 onerror="this.src='/img/course_img/default.jpg'">
+        </div>
+        <div class="course-details">
+            <h1 class="course-title">@Model.CourseName</h1>
+            <div class="course-meta">
+                <div class="meta-item">
+                    <i class="fas fa-tag"></i>
+                    <span class="badge badge-primary">@Model.Category?.CategoryName</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-play-circle"></i>
+                    <strong>@(Model.Lessons?.Count ?? 0)</strong> bài học
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-hashtag"></i>
+                    <strong>ID: @Model.CourseID</strong>
+                </div>
+            </div>
+            <div class="course-description">
+                <strong><i class="fas fa-info-circle"></i> Mô tả:</strong>
+                <p style="margin: 0.5rem 0 0 0;">@Model.Description</p>
+            </div>
+            <div class="action-buttons">
+                <a asp-action="Edit" asp-route-id="@Model.CourseID" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Chỉnh sửa khóa học
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lessons Section -->
+<div class="lessons-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-graduation-cap"></i>
+            Danh sách bài học
+        </h2>
+        <a asp-area="Admin" asp-controller="Lessons" asp-action="Create"
+           asp-route-courseId="@Model.CourseID" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Thêm bài học
+        </a>
+    </div>
+
+    @if (Model.Lessons != null && Model.Lessons.Any())
+    {
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th style="width: 140px;">Hình ảnh</th>
+                        <th>Tên bài học</th>
+                        <th style="width: 200px;">Link video</th>
+                        <th style="width: 200px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var lesson in Model.Lessons.OrderBy(l => l.LessonID))
+                    {
+                        <tr>
+                            <td><strong>#@lesson.LessonID</strong></td>
+                            <td>
+                                <img src="@lesson.LessonImage" alt="@lesson.LessonName"
+                                     class="lesson-img-thumb"
+                                     onerror="this.src='/img/lesson_img/default.jpg'">
+                            </td>
+                            <td>
+                                <div class="lesson-name">@lesson.LessonName</div>
+                            </td>
+                            <td>
+                                <a href="@lesson.LinkVideo" target="_blank" class="video-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    Xem video
+                                </a>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                    
+                                    <a asp-area="Admin" asp-controller="Lessons" asp-action="Edit"
+                                       asp-route-id="@lesson.LessonID"
+                                       class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="Lessons" asp-action="Delete"
+                                       asp-route-id="@lesson.LessonID"
+                                       class="btn btn-danger btn-sm" title="Xóa"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa bài học này?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer">
+            Tổng cộng: <strong>@Model.Lessons.Count()</strong> bài học
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fas fa-book-open"></i>
+            <p>Chưa có bài học nào</p>
+            <a asp-area="Admin" asp-controller="Lessons" asp-action="Create"
+               asp-route-courseId="@Model.CourseID" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Thêm bài học đầu tiên
+            </a>
+        </div>
+    }
+</div>

@@ -1,0 +1,298 @@
+﻿@using HTNL.Edu.Models
+@model Category
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Chỉnh sửa danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .form-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+        .form-header h2 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+    .form-body {
+        padding: 2rem;
+    }
+
+    .icon-preview {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 1.5rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .preview-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        flex-shrink: 0;
+    }
+
+    .preview-info {
+        flex: 1;
+    }
+
+        .preview-info h3 {
+            font-size: 1.2rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-info p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .text-danger {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .validation-summary {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+        .validation-summary ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+    .info-box {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: start;
+        gap: 0.75rem;
+    }
+
+        .info-box i {
+            color: #ea580c;
+            margin-top: 0.2rem;
+        }
+
+    .info-box-content {
+        flex: 1;
+        color: #7c2d12;
+        font-size: 0.9rem;
+    }
+
+    .char-counter {
+        text-align: right;
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+        .char-counter.warning {
+            color: #f59e0b;
+        }
+
+        .char-counter.danger {
+            color: #ef4444;
+        }
+
+    .id-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f3f4f6;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="form-card">
+    <div class="form-header">
+        <h2>
+            <i class="fas fa-edit"></i> Chỉnh sửa danh mục
+        </h2>
+        <a asp-action="Index" class="btn btn-primary" style="background: white; color: #f59e0b;">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="form-body">
+        <form asp-action="Edit" method="post" id="categoryForm">
+            <input type="hidden" asp-for="CategoryID" />
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <div class="id-badge">
+                <i class="fas fa-hashtag"></i>
+                <span>ID: <strong>@Model.CategoryID</strong></span>
+            </div>
+
+            <!-- Preview -->
+            <div class="icon-preview">
+                <div class="preview-icon">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="preview-info">
+                    <h3 id="previewName">@Model.CategoryName</h3>
+                    <p>Xem trước danh mục sau khi chỉnh sửa</p>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <div class="info-box-content">
+                    Bạn đang chỉnh sửa danh mục <strong>"@Model.CategoryName"</strong>.
+                    Thay đổi tên danh mục sẽ ảnh hưởng đến tất cả khóa học trong danh mục này.
+                </div>
+            </div>
+
+            <!-- Category Name -->
+            <div class="form-group">
+                <label asp-for="CategoryName">
+                    <i class="fas fa-tag"></i> Tên danh mục
+                    <span style="color: red;">*</span>
+                </label>
+                <input asp-for="CategoryName" class="form-control"
+                       id="categoryNameInput"
+                       placeholder="Nhập tên danh mục..."
+                       maxlength="100"
+                       autocomplete="off" />
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                <div class="char-counter" id="charCounter">
+                    @Model.CategoryName.Length / 100 ký tự
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Cập nhật
+                </button>
+                <a asp-action="Details" asp-route-id="@Model.CategoryID" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> Xem chi tiết
+                </a>
+                <a asp-action="Index" class="btn btn-danger">
+                    <i class="fas fa-times"></i> Hủy bỏ
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const categoryNameInput = document.getElementById('categoryNameInput');
+        const previewName = document.getElementById('previewName');
+        const charCounter = document.getElementById('charCounter');
+        const originalName = '@Model.CategoryName';
+
+        // Live preview
+        categoryNameInput.addEventListener('input', function() {
+            const value = this.value.trim();
+            const length = this.value.length;
+
+            // Update preview
+            if (value) {
+                previewName.textContent = value;
+            } else {
+                previewName.textContent = originalName;
+            }
+
+            // Update character counter
+            charCounter.textContent = length + ' / 100 ký tự';
+
+            // Change color based on length
+            if (length > 80) {
+                charCounter.classList.add('danger');
+                charCounter.classList.remove('warning');
+            } else if (length > 60) {
+                charCounter.classList.add('warning');
+                charCounter.classList.remove('danger');
+            } else {
+                charCounter.classList.remove('warning', 'danger');
+            }
+        });
+
+        // Form validation
+        document.getElementById('categoryForm').addEventListener('submit', function(e) {
+            const value = categoryNameInput.value.trim();
+            if (!value) {
+                e.preventDefault();
+                alert('Vui lòng nhập tên danh mục!');
+                categoryNameInput.focus();
+                return false;
+            }
+            if (value.length < 3) {
+                e.preventDefault();
+                alert('Tên danh mục phải có ít nhất 3 ký tự!');
+                categoryNameInput.focus();
+                return false;
+            }
+            if (value === originalName) {
+                if (!confirm('Tên danh mục không thay đổi. Bạn có chắc muốn lưu?')) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+
+        // Focus on input when page loads
+        window.addEventListener('load', function() {
+            categoryNameInput.focus();
+            categoryNameInput.select();
+        });
+    </script>
+}

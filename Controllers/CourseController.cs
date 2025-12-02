@@ -49,14 +49,14 @@ namespace HTNL.Edu.Controllers
             var course = await _context.Courses
                 .Include(c => c.Category)
                 .Include(c => c.Lessons)
-                .FirstOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(c => c.CourseID == id);
 
             if (course == null)
             {
                 return NotFound();
             }
 
-            // Kiểm tra xem user đã đăng ký khóa học này chưa
+            // Kiểm tra nếu user đã đăng nhập và đã đăng ký khóa học
             if (User.Identity?.IsAuthenticated == true)
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -65,10 +65,16 @@ namespace HTNL.Edu.Controllers
                     var isEnrolled = await _context.CourseDetails
                         .AnyAsync(cd => cd.UserID == userId && cd.CourseID == id);
 
-                    ViewBag.IsEnrolled = isEnrolled;
+                    if (isEnrolled)
+                    {
+                        // Đã đăng ký -> chuyển đến CourseInfo
+                        return RedirectToAction("CourseInfo", new { id = id });
+                    }
                 }
             }
 
+            // Chưa đăng ký hoặc chưa đăng nhập -> hiển thị trang Details để đăng ký
+            ViewBag.IsEnrolled = false;
             return View(course);
         }
 
@@ -162,6 +168,39 @@ namespace HTNL.Edu.Controllers
                 .ToListAsync();
 
             return View(myCourses);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> CourseInfo(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdClaim, out int userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Kiểm tra user đã đăng ký khóa học chưa
+            var courseDetail = await _context.CourseDetails
+                .Include(cd => cd.Course)
+                    .ThenInclude(c => c.Category)
+                .Include(cd => cd.Course)
+                    .ThenInclude(c => c.Lessons)
+                .Include(cd => cd.CourseDetailLessons)
+                    .ThenInclude(cdl => cdl.Lesson)
+                .FirstOrDefaultAsync(cd => cd.UserID == userId && cd.CourseID == id);
+
+            if (courseDetail == null)
+            {
+                // Nếu chưa đăng ký, chuyển đến trang Details để đăng ký
+                return RedirectToAction("Details", new { id = id });
+            }
+
+            return View(courseDetail);
         }
     }
 }

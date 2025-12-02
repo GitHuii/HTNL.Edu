@@ -1,134 +1,779 @@
 ﻿@{
     ViewData["Title"] = "Trang chủ";
+    var initialCourses = ViewBag.InitialCourses as List<HTNL.Edu.Models.CourseCardViewModel>;
+    var totalCourses = ViewBag.TotalCourses as int? ?? 0;
 }
 
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            opacity: 0.3;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+
+    .hero-text h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-text p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+        line-height: 1.6;
+    }
+
+    .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .stat-box {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-hero {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s;
+        font-size: 1.1rem;
+    }
+
+    .btn-hero-primary {
+        background: white;
+        color: #667eea;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+    .btn-hero-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+        .btn-hero-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+    .hero-image {
+        position: relative;
+    }
+
+    .hero-illustration {
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 5rem 0;
+        background: #f9fafb;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.25rem;
+        color: #6b7280;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        text-align: center;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 1.5rem;
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+
+    .feature-description {
+        color: #6b7280;
+        line-height: 1.6;
+    }
+
+    /* Courses Section */
+    .courses-section {
+        padding: 5rem 0;
+        background: white;
+    }
+
+    .courses-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 3rem;
+    }
+
+    .btn-view-all {
+        padding: 0.75rem 1.5rem;
+        background: #667eea;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+    }
+
+        .btn-view-all:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .course-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        border: 1px solid #e5e7eb;
+    }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+    .course-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .course-content {
+        padding: 1.5rem;
+    }
+
+    .course-category {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        background: #eff6ff;
+        color: #1e40af;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .course-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .course-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .course-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .course-lessons {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+        .course-lessons i {
+            color: #667eea;
+        }
+
+    .btn-enroll {
+        padding: 0.5rem 1rem;
+        background: #667eea;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+        .btn-enroll:hover {
+            background: #5568d3;
+        }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+    }
+
+    .cta-content h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .cta-content p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    /* Testimonials Section */
+    .testimonials-section {
+        padding: 5rem 0;
+        background: #f9fafb;
+    }
+
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .testimonial-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .testimonial-text {
+        color: #4b5563;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        font-style: italic;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .author-info h4 {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+
+    .author-info p {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .stars {
+        color: #fbbf24;
+        margin-bottom: 1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-content
+
+    {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-image {
+        display: none;
+    }
+
+    .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    }
+
+    .load-more-container {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e5e7eb;
+    }
+
+    .btn-load-more {
+        padding: 1rem 2.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+        .btn-load-more:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-load-more:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-load-more i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-load-more:hover i {
+            transform: translateY(3px);
+        }
+
+    .loading-spinner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        color: #667eea;
+        font-weight: 600;
+        padding: 1rem;
+    }
+
+        .loading-spinner i {
+            font-size: 1.5rem;
+        }
+
+    .courses-info {
+        margin-top: 1rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+        .courses-info span {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+    .no-courses {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6b7280;
+    }
+
+        .no-courses i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-courses p {
+            font-size: 1.25rem;
+        }
+
+    /* Course Card Animation */
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .course-card.new {
+        animation: slideIn 0.5s ease;
+    }
+</style>
+
 <!-- Hero Section -->
-<section class="hero">
+<section class="hero-section">
     <div class="container">
-        <h1>Học Miễn Phí Cùng EduFree</h1>
-        <p>Hàng ngàn khóa học chất lượng cao, hoàn toàn miễn phí</p>
-        <a href="#" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
-            Bắt đầu học ngay <i class="fas fa-arrow-right"></i>
-        </a>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Học lập trình miễn phí, thành công trong tầm tay</h1>
+                <p>Khám phá hàng trăm khóa học lập trình chất lượng cao, hoàn toàn miễn phí. Bắt đầu hành trình trở thành lập trình viên chuyên nghiệp ngay hôm nay!</p>
+
+                <div class="hero-buttons">
+                    <a asp-controller="Course" asp-action="Index" class="btn-hero btn-hero-primary">
+                        <i class="fas fa-rocket"></i>
+                        Khám phá khóa học
+                    </a>
+                    @if (User.Identity?.IsAuthenticated != true)
+                    {
+                        <a asp-controller="Account" asp-action="Register" class="btn-hero btn-hero-outline">
+                            <i class="fas fa-user-plus"></i>
+                            Đăng ký ngay
+                        </a>
+                    }
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-box">
+                        <span class="stat-number">8+</span>
+                        <span class="stat-label">Khóa học</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Miễn phí</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Học mọi lúc</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <svg class="hero-illustration" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Laptop -->
+                    <rect x="100" y="150" width="300" height="180" rx="10" fill="#1f2937" />
+                    <rect x="110" y="160" width="280" height="150" rx="5" fill="#3b82f6" />
+                    <rect x="120" y="170" width="260" height="120" fill="#eff6ff" />
+
+                    <!-- Code lines -->
+                    <rect x="130" y="180" width="80" height="8" rx="4" fill="#667eea" />
+                    <rect x="130" y="200" width="120" height="8" rx="4" fill="#667eea" opacity="0.7" />
+                    <rect x="130" y="220" width="100" height="8" rx="4" fill="#667eea" opacity="0.5" />
+                    <rect x="130" y="240" width="140" height="8" rx="4" fill="#667eea" opacity="0.7" />
+                    <rect x="130" y="260" width="90" height="8" rx="4" fill="#667eea" opacity="0.5" />
+
+                    <!-- Laptop base -->
+                    <path d="M 80 330 L 420 330 L 400 350 L 100 350 Z" fill="#4b5563" />
+
+                    <!-- Floating elements -->
+                    <circle cx="450" cy="100" r="30" fill="#10b981" opacity="0.3" />
+                    <circle cx="50" cy="250" r="40" fill="#f59e0b" opacity="0.3" />
+                    <rect x="400" y="250" width="60" height="60" rx="10" fill="#ef4444" opacity="0.3" transform="rotate(15 430 280)" />
+                </svg>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- Features Section -->
 <section class="features-section">
     <div class="container">
-        <h2 class="section-title">Tại sao chọn EduFree?</h2>
+        <div class="section-header">
+            <h2 class="section-title">Tại sao chọn HTNL.Edu?</h2>
+            <p class="section-subtitle">Nền tảng học lập trình hàng đầu với những ưu điểm vượt trội</p>
+        </div>
+
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-gift"></i>
                 </div>
-                <h3>100% Miễn Phí</h3>
-                <p>Tất cả khóa học đều hoàn toàn miễn phí, không có chi phí ẩn</p>
+                <h3 class="feature-title">100% Miễn phí</h3>
+                <p class="feature-description">Tất cả khóa học đều hoàn toàn miễn phí. Không có chi phí ẩn, không cần thẻ tín dụng.</p>
             </div>
+
             <div class="feature-card">
                 <div class="feature-icon">
-                    <i class="fas fa-certificate"></i>
+                    <i class="fas fa-laptop-code"></i>
                 </div>
-                <h3>Chứng Chỉ</h3>
-                <p>Nhận chứng chỉ sau khi hoàn thành khóa học</p>
+                <h3 class="feature-title">Học thực hành</h3>
+                <p class="feature-description">Học qua video bài giảng chất lượng cao với ví dụ minh họa cụ thể và dễ hiểu.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3>Cộng Đồng</h3>
-                <p>Tham gia cộng đồng học viên sôi động</p>
-            </div>
+
             <div class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <h3>Học Mọi Lúc</h3>
-                <p>Học theo tốc độ của bạn, mọi lúc mọi nơi</p>
+                <h3 class="feature-title">Học mọi lúc</h3>
+                <p class="feature-description">Học theo tốc độ của bạn, bất cứ lúc nào, bất cứ nơi đâu. Truy cập trọn đời.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3 class="feature-title">Chứng chỉ</h3>
+                <p class="feature-description">Nhận chứng chỉ hoàn thành khóa học để chứng minh kỹ năng của bạn.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Theo dõi tiến độ</h3>
+                <p class="feature-description">Hệ thống theo dõi tiến độ học tập và streak giúp bạn duy trì động lực.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="feature-title">Cộng đồng</h3>
+                <p class="feature-description">Tham gia cộng đồng học viên sôi động, cùng nhau học hỏi và phát triển.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Courses Section -->
-<section class="courses-section">
+<!-- Popular Courses Section -->
+<section class="courses-section" id="courses">
     <div class="container">
-        <h2 class="section-title">Khóa Học Phổ Biến</h2>
-        <div class="course-grid">
-            <div class="course-card">
-                <img src="https://via.placeholder.com/400x200/4f46e5/ffffff?text=ASP.NET+Core" alt="ASP.NET Core" class="course-image">
-                <div class="course-content">
-                    <span class="course-category">Lập trình Web</span>
-                    <h3 class="course-title">Lập trình ASP.NET Core MVC từ cơ bản đến nâng cao</h3>
-                    <p>Học xây dựng ứng dụng web với ASP.NET Core, Entity Framework và SQL Server</p>
-                    <div class="course-meta">
-                        <span><i class="fas fa-user"></i> 2,543 học viên</span>
-                        <span><i class="fas fa-clock"></i> 45 giờ</span>
+        <div class="courses-header">
+            <div>
+                <h2 class="section-title">Khóa học phổ biến</h2>
+                <p class="section-subtitle">Bắt đầu với những khóa học được yêu thích nhất</p>
+            </div>
+            <a asp-controller="Course" asp-action="Index" class="btn-view-all">
+                Xem tất cả
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="courses-grid" id="coursesGrid">
+            @if (initialCourses != null && initialCourses.Any())
+            {
+                @foreach (var course in initialCourses)
+                {
+                    <div class="course-card">
+                        <img src="@(!string.IsNullOrEmpty(course.ImageUrl) ? course.ImageUrl : $"https://via.placeholder.com/400x250/667eea/ffffff?text={Uri.EscapeDataString(course.CourseName ?? "Course")}")"
+                             alt="@course.CourseName"
+                             class="course-image"
+                             onerror="this.src='https://via.placeholder.com/400x250/667eea/ffffff?text=Course'">
+                        <div class="course-content">
+                            <span class="course-category">
+                                <i class="fas fa-tag"></i> @course.CategoryName
+                            </span>
+                            <h3 class="course-title">@course.CourseName</h3>
+                            <p class="course-description">@course.Description</p>
+                            <div class="course-meta">
+                                <div class="course-lessons">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>@course.LessonCount bài học</span>
+                                </div>
+                                <a asp-controller="Course" asp-action="Details" asp-route-id="@course.CourseID" class="btn-enroll">
+                                    Xem khóa học
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="no-courses">
+                    <i class="fas fa-inbox"></i>
+                    <p>Chưa có khóa học nào</p>
+                </div>
+            }
+        </div>
+
+        @if (totalCourses > 3)
+        {
+            <div class="load-more-container" id="loadMoreContainer">
+                <button type="button" class="btn-load-more" id="btnLoadMore">
+                    <span class="load-more-text">Xem thêm khóa học</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Đang tải...</span>
+                </div>
+                <div class="courses-info">
+                    <span id="coursesCount">3</span> / <span id="totalCourses">@totalCourses</span> khóa học
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Học viên nói gì về chúng tôi?</h2>
+            <p class="section-subtitle">Những phản hồi chân thực từ cộng đồng học viên</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"Khóa học C++ rất dễ hiểu và chi tiết. Tôi đã có thể tự làm được những dự án nhỏ sau khi hoàn thành khóa học. Cảm ơn HTNL.Edu!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">N</div>
+                    <div class="author-info">
+                        <h4>Nguyễn Văn Nam</h4>
+                        <p>Sinh viên CNTT</p>
                     </div>
                 </div>
             </div>
 
-            <div class="course-card">
-                <img src="https://via.placeholder.com/400x200/10b981/ffffff?text=React+JS" alt="React JS" class="course-image">
-                <div class="course-content">
-                    <span class="course-category">Frontend</span>
-                    <h3 class="course-title">React JS - Xây dựng ứng dụng Single Page</h3>
-                    <p>Làm chủ React JS, Hooks, Redux và tích hợp API REST</p>
-                    <div class="course-meta">
-                        <span><i class="fas fa-user"></i> 3,210 học viên</span>
-                        <span><i class="fas fa-clock"></i> 38 giờ</span>
+            <div class="testimonial-card">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"Nền tảng tuyệt vời! Giao diện thân thiện, dễ sử dụng. Hệ thống streak giúp tôi có động lực học mỗi ngày. Rất khuyến khích!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">T</div>
+                    <div class="author-info">
+                        <h4>Trần Minh Tài</h4>
+                        <p>Lập trình viên</p>
                     </div>
                 </div>
             </div>
 
-            <div class="course-card">
-                <img src="https://via.placeholder.com/400x200/f59e0b/ffffff?text=Python" alt="Python" class="course-image">
-                <div class="course-content">
-                    <span class="course-category">Lập trình</span>
-                    <h3 class="course-title">Python cho người mới bắt đầu</h3>
-                    <p>Học Python từ cơ bản, lập trình hướng đối tượng và xử lý dữ liệu</p>
-                    <div class="course-meta">
-                        <span><i class="fas fa-user"></i> 4,892 học viên</span>
-                        <span><i class="fas fa-clock"></i> 32 giờ</span>
-                    </div>
+            <div class="testimonial-card">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
                 </div>
-            </div>
-
-            <div class="course-card">
-                <img src="https://via.placeholder.com/400x200/ef4444/ffffff?text=Data+Science" alt="Data Science" class="course-image">
-                <div class="course-content">
-                    <span class="course-category">Data Science</span>
-                    <h3 class="course-title">Khoa học dữ liệu với Python</h3>
-                    <p>Phân tích dữ liệu, machine learning và visualization với Python</p>
-                    <div class="course-meta">
-                        <span><i class="fas fa-user"></i> 1,876 học viên</span>
-                        <span><i class="fas fa-clock"></i> 52 giờ</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="course-card">
-                <img src="https://via.placeholder.com/400x200/8b5cf6/ffffff?text=UI+UX" alt="UI UX" class="course-image">
-                <div class="course-content">
-                    <span class="course-category">Thiết kế</span>
-                    <h3 class="course-title">UI/UX Design căn bản</h3>
-                    <p>Học thiết kế giao diện người dùng và trải nghiệm người dùng chuyên nghiệp</p>
-                    <div class="course-meta">
-                        <span><i class="fas fa-user"></i> 2,109 học viên</span>
-                        <span><i class="fas fa-clock"></i> 28 giờ</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="course-card">
-                <img src="https://via.placeholder.com/400x200/06b6d4/ffffff?text=Flutter" alt="Flutter" class="course-image">
-                <div class="course-content">
-                    <span class="course-category">Mobile App</span>
-                    <h3 class="course-title">Lập trình Mobile với Flutter</h3>
-                    <p>Xây dựng ứng dụng di động đa nền tảng với Flutter và Dart</p>
-                    <div class="course-meta">
-                        <span><i class="fas fa-user"></i> 1,654 học viên</span>
-                        <span><i class="fas fa-clock"></i> 42 giờ</span>
+                <p class="testimonial-text">"Học hoàn toàn miễn phí mà chất lượng không thua gì các khóa học trả phí. Video bài giảng rõ ràng, dễ hiểu. 5 sao không có gì để chê!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">H</div>
+                    <div class="author-info">
+                        <h4>Lê Quang Huy</h4>
+                        <p>Freelancer</p>
                     </div>
                 </div>
             </div>
@@ -137,12 +782,115 @@
 </section>
 
 <!-- CTA Section -->
-<section class="hero" style="padding: 3rem 0;">
+<section class="cta-section">
     <div class="container">
-        <h2>Bắt đầu hành trình học tập của bạn ngay hôm nay!</h2>
-        <p>Đăng ký miễn phí và truy cập hàng ngàn khóa học chất lượng</p>
-        <a href="#" class="btn btn-outline" style="border-color: white; color: white; font-size: 1.1rem; padding: 0.8rem 2rem;">
-            Đăng ký ngay
-        </a>
+        <div class="cta-content">
+            <h2>Sẵn sàng bắt đầu hành trình của bạn?</h2>
+            <p>Tham gia cùng hàng nghìn học viên đang học tập và phát triển mỗi ngày</p>
+            <div class="cta-buttons">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Course" asp-action="Index" class="btn-hero btn-hero-primary">
+                        <i class="fas fa-book-open"></i>
+                        Khám phá khóa học
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn-hero btn-hero-primary">
+                        <i class="fas fa-user-plus"></i>
+                        Đăng ký miễn phí
+                    </a>
+                    <a asp-controller="Course" asp-action="Index" class="btn-hero btn-hero-outline">
+                        <i class="fas fa-search"></i>
+                        Xem khóa học
+                    </a>
+                }
+            </div>
+        </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentSkip = 3; // Đã load 3 courses ban đầu
+        const totalCourses = @totalCourses;
+        const btnLoadMore = document.getElementById('btnLoadMore');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const coursesGrid = document.getElementById('coursesGrid');
+        const coursesCount = document.getElementById('coursesCount');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+        if (btnLoadMore) {
+            btnLoadMore.addEventListener('click', async function() {
+                // Show loading
+                btnLoadMore.style.display = 'none';
+                loadingSpinner.style.display = 'flex';
+
+                try {
+                    const response = await fetch(`/Home/LoadMoreCourses?skip=${currentSkip}&take=3`);
+                    const data = await response.json();
+
+                    if (data.courses && data.courses.length > 0) {
+                        // Add new courses
+                        data.courses.forEach(course => {
+                            const courseCard = createCourseCard(course);
+                            coursesGrid.appendChild(courseCard);
+                        });
+
+                        // Update counter
+                        currentSkip += data.courses.length;
+                        coursesCount.textContent = currentSkip;
+
+                        // Check if there are more courses
+                        if (!data.hasMore || currentSkip >= totalCourses) {
+                            loadMoreContainer.style.display = 'none';
+                        }
+                    }
+
+                    // Hide loading
+                    loadingSpinner.style.display = 'none';
+                    btnLoadMore.style.display = 'inline-flex';
+
+                } catch (error) {
+                    console.error('Error loading courses:', error);
+                    loadingSpinner.style.display = 'none';
+                    btnLoadMore.style.display = 'inline-flex';
+                    alert('Có lỗi xảy ra khi tải khóa học. Vui lòng thử lại!');
+                }
+            });
+        }
+
+        function createCourseCard(course) {
+            const card = document.createElement('div');
+            card.className = 'course-card new';
+
+            const imageUrl = course.imageUrl || `https://via.placeholder.com/400x250/667eea/ffffff?text=${encodeURIComponent(course.courseName || 'Course')}`;
+
+            card.innerHTML = `
+                <img src="${imageUrl}"
+                     alt="${course.courseName}"
+                     class="course-image"
+                     onerror="this.src='https://via.placeholder.com/400x250/667eea/ffffff?text=Course'">
+                <div class="course-content">
+                    <span class="course-category">
+                        <i class="fas fa-tag"></i> ${course.categoryName}
+                    </span>
+                    <h3 class="course-title">${course.courseName}</h3>
+                    <p class="course-description">${course.description || ''}</p>
+                    <div class="course-meta">
+                        <div class="course-lessons">
+                            <i class="fas fa-play-circle"></i>
+                            <span>${course.lessonCount} bài học</span>
+                        </div>
+                        <a href="/Course/Details/${course.courseID}" class="btn-enroll">
+                            Xem khóa học
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+    });
+</script>

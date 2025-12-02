@@ -1,14 +1,78 @@
-using System.Diagnostics;
 using HTNL.Edu.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace HTNL.Edu.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly AppDbContext _context;
+        public HomeController(AppDbContext context)
         {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            // Load 3 khóa học đầu tiên
+            var courses = await _context.Courses
+                .Include(c => c.Category)
+                .Include(c => c.CourseDetails)
+                .OrderByDescending(c => c.CourseID)
+                .Take(3)
+                .Select(c => new CourseCardViewModel
+                {
+                    CourseID = c.CourseID,
+                    CourseName = c.CourseName,
+                    Description = c.Description,
+                    ImageUrl = c.CourseImage,
+                    CategoryName = c.Category != null ? c.Category.CategoryName : "Chưa phân loại",
+                    LessonCount = c.CourseDetails.Count,
+                    EnrolledCount = _context.CourseDetails
+                        .Count(cd => cd.CourseID == c.CourseID)
+                })
+                .ToListAsync();
+
+            ViewBag.InitialCourses = courses;
+            ViewBag.TotalCourses = await _context.Courses.CountAsync();
+
             return View();
+        }
+
+        // GET: Home/LoadMoreCourses
+        [HttpGet]
+        public async Task<IActionResult> LoadMoreCourses(int skip = 0, int take = 3)
+        {
+            var courses = await _context.Courses
+                .Include(c => c.Category)
+                .Include(c => c.CourseDetails)
+                .OrderByDescending(c => c.CourseID)
+                .Skip(skip)
+                .Take(take)
+                .Select(c => new CourseCardViewModel
+                {
+                    CourseID = c.CourseID,
+                    CourseName = c.CourseName,
+                    Description = c.Description,
+                    ImageUrl = c.CourseImage,
+                    CategoryName = c.Category != null ? c.Category.CategoryName : "Chưa phân loại",
+                    LessonCount = c.CourseDetails.Count,
+                    EnrolledCount = _context.CourseDetails
+                        .Count(cd => cd.CourseID == c.CourseID)
+                })
+                .ToListAsync();
+
+            var totalCourses = await _context.Courses.CountAsync();
+            var hasMore = (skip + take) < totalCourses;
+
+            return Json(new
+            {
+                courses = courses,
+                hasMore = hasMore,
+                totalCourses = totalCourses,
+                currentCount = skip + courses.Count
+            });
         }
 
         public IActionResult About()

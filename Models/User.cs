@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace HTNL.Edu.Models
 {
@@ -13,6 +13,8 @@ namespace HTNL.Edu.Models
 
         public string? Email { get; set; }
         public string? UserName { get; set; }
+        /// <summary>Mật khẩu được mã hóa BCrypt (luôn dài 60 ký tự).</summary>
+        [MaxLength(60)]
         public string? PassWord { get; set; }
 
 

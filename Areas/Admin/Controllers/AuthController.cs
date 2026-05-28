@@ -1,4 +1,5 @@
-﻿using HTNL.Edu.Models;
+using HTNL.Edu.Helpers;
+using HTNL.Edu.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +20,11 @@ namespace HTMLEdu.Areas.Admin.Controllers
 
         // GET: Admin/Auth/Login
         [AllowAnonymous]
-        public IActionResult Login(string? returnUrl = null)
+        public async Task<IActionResult> Login(string? returnUrl = null)
         {
+            var result = await HttpContext.AuthenticateAsync("AdminScheme");
             // Nếu đã đăng nhập với quyền Admin
-            if (User.Identity?.IsAuthenticated == true && User.HasClaim("Role", "Admin"))
+            if (result.Succeeded && result.Principal.HasClaim("Role", "Admin"))
             {
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
@@ -44,11 +46,16 @@ namespace HTMLEdu.Areas.Admin.Controllers
                 return View(model);
             }
 
-            // Tìm user với Role = "Admin"
+            // Tìm admin theo username và role (không so sánh password trực tiếp ở DB)
             var admin = await _context.Users
                 .FirstOrDefaultAsync(u => u.UserName == model.UserName
-                                       && u.PassWord == model.PassWord
                                        && u.Role == "Admin");
+
+            // Xác minh mật khẩu bằng BCrypt
+            if (admin != null && !PasswordHasher.Verify(model.PassWord, admin.PassWord ?? ""))
+            {
+                admin = null;
+            }
 
             if (admin != null)
             {

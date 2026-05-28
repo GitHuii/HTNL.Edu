@@ -1,4 +1,5 @@
-﻿using HTMLEdu.Filters;
+using HTMLEdu.Filters;
+using HTNL.Edu.Helpers;
 using HTNL.Edu.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -95,6 +96,9 @@ namespace HTNL.Edu.Areas.Admin.Controllers
                 }
 
 
+                // Hash mật khẩu trước khi lưu
+                user.PassWord = PasswordHasher.Hash(user.PassWord ?? "");
+
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Thêm người dùng thành công!";
@@ -135,14 +139,15 @@ namespace HTNL.Edu.Areas.Admin.Controllers
                 {
                     var existingUser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserID == id);
 
-                    // Keep old password if not changing
+                    // Giữ mật khẩu cũ nếu không thay đổi
                     if (string.IsNullOrEmpty(newPassword))
                     {
                         user.PassWord = existingUser.PassWord;
                     }
                     else
                     {
-                        user.PassWord = newPassword;
+                        // Hash mật khẩu mới trước khi lưu
+                        user.PassWord = PasswordHasher.Hash(newPassword);
                     }
 
                     _context.Update(user);

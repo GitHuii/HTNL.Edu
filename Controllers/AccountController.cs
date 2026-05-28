@@ -1,4 +1,5 @@
-﻿using HTMLEdu.Filters;
+using HTMLEdu.Filters;
+using HTNL.Edu.Helpers;
 using HTNL.Edu.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -45,11 +46,16 @@ namespace HTMLEdu.Controllers
                 return View(model);
             }
 
-            // Tìm user với Role = "User"
+            // Tìm user theo username và role (không so sánh password trực tiếp ở DB)
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.UserName == model.UserName
-                                       && u.PassWord == model.PassWord
                                        && u.Role == "User");
+
+            // Xác minh mật khẩu bằng BCrypt
+            if (user != null && !PasswordHasher.Verify(model.PassWord, user.PassWord ?? ""))
+            {
+                user = null;
+            }
 
             if (user != null)
             {
@@ -127,13 +133,13 @@ namespace HTMLEdu.Controllers
                 return View(model);
             }
 
-            // Tạo user mới
+            // Tạo user mới với mật khẩu đã được hash
             var user = new User
             {
                 FullName = model.FullName,
                 UserName = model.UserName,
                 Email = model.Email,
-                PassWord = model.PassWord, // Nên hash password trong thực tế
+                PassWord = PasswordHasher.Hash(model.PassWord),
                 Role = "User",
                 Streak = 0
             };
@@ -273,15 +279,15 @@ namespace HTMLEdu.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Verify old password
-            if (user.PassWord != model.CurrentPassword)
+            // Verify mật khẩu hiện tại bằng BCrypt
+            if (!PasswordHasher.Verify(model.CurrentPassword, user.PassWord ?? ""))
             {
                 TempData["ErrorMessage"] = "Mật khẩu hiện tại không đúng";
                 return RedirectToAction("Settings");
             }
 
-            // Update password
-            user.PassWord = model.NewPassword;
+            // Hash mật khẩu mới trước khi lưu
+            user.PassWord = PasswordHasher.Hash(model.NewPassword);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Đổi mật khẩu thành công!";

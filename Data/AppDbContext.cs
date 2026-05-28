@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,13 +34,20 @@ using HTNL.Edu.Models;
             .HasForeignKey(c => c.LessonID)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Mật khẩu đã được mã hóa BCrypt (workFactor=12)
+        // admin   → "admin"
+        // User    → "123"
+        const string hashAdmin = "$2a$12$5XMrZjiW2JFTBe/1jH.VCOuuLxj9lfXMXp0uDBbjPQJ724tnU6kUm";
+        const string hash123   = "$2a$12$pLjDAA/eejfLxbmNMC1Sd.c..cEg6uO5FOZ2GbMxc8i6r87UgnMOq";
+
         modelBuilder.Entity<User>().HasData(
-            new User { UserID = 1, FullName = "Admin", Role = "Admin", Streak = 0, Email = "admin@htnl.edu" , UserName = "admin", PassWord = "admin" },
-            new User { UserID = 2, FullName = "Nam", Role = "User", Streak = 2, Email = "nam@htnl.edu", UserName = "nam", PassWord = "123" },
-            new User { UserID = 3, FullName = "Tai", Role = "User", Streak = 18, Email = "tai@htnl.edu", UserName = "tai", PassWord = "123" },
-            new User { UserID = 4, FullName = "Luong", Role = "User", Streak = 34, Email = "luong@htnl.edu", UserName = "luong", PassWord = "123" },
-            new User { UserID = 5, FullName = "Huy", Role = "User", Streak = 36, Email = "huy@htnl.edu", UserName = "huy", PassWord = "123" }
-            );
+            new User { UserID = 1, FullName = "Admin",          Role = "Admin", Streak = 0,  Email = "admin@htnl.edu",                         UserName = "admin", PassWord = hashAdmin },
+            new User { UserID = 2, FullName = "Nam",            Role = "User",  Streak = 2,  Email = "nam@htnl.edu",                           UserName = "nam",   PassWord = hash123   },
+            new User { UserID = 3, FullName = "Tai",            Role = "User",  Streak = 18, Email = "tai@htnl.edu",                           UserName = "tai",   PassWord = hash123   },
+            new User { UserID = 4, FullName = "Luong",          Role = "User",  Streak = 34, Email = "luong@htnl.edu",                         UserName = "luong", PassWord = hash123   },
+            new User { UserID = 5, FullName = "Huy",            Role = "User",  Streak = 1,  Email = "huy@htnl.edu",                           UserName = "huy",   PassWord = hash123   },
+            new User { UserID = 6, FullName = "Nguyễn Viết Huy", Role = "User", Streak = 1, Email = "nvhuy.dhti16a6hn@sv.uneti.edu.vn",       UserName = "huyy",  PassWord = hash123   }
+        );
 
         modelBuilder.Entity<Category>().HasData(
             new Category { CategoryID = 1, CategoryName = "Khóa Học C++" },
